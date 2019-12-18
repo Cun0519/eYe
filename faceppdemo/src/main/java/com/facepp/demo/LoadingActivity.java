@@ -157,6 +157,8 @@ public class LoadingActivity extends Activity {
     private void authState(boolean isSuccess,int code,String msg) {
         if (isSuccess) {
 
+            //授权成功
+            //进入FaceppActionActivity
             Intent intent = new Intent();
             intent.setClass(this, FaceppActionActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//If set, and the activity being launched is already running in the current task, then instead of launching a new instance of that activity,all of the other activities on top of it will be closed and this Intent will be delivered to the (now on top) old activity as a new Intent.

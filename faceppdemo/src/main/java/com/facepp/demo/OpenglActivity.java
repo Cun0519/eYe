@@ -358,6 +358,10 @@ public class OpenglActivity extends Activity
             ArrayList<ArrayList> pointsOpengl = new ArrayList<ArrayList>();
             ArrayList<FloatBuffer> rectsOpengl = new ArrayList<FloatBuffer>();
             if (faces.length > 0) {
+
+                //faces.length为人脸个数
+                //Log.d("cunxie_faces.length", String.valueOf(faces.length));
+
                 for (int c = 0; c < faces.length; c++) {
 
                     if (is106Points)
@@ -379,14 +383,33 @@ public class OpenglActivity extends Activity
                     //0.4.7之前（包括）jni把所有角度的点算到竖直的坐标，所以外面画点需要再调整回来，才能与其他角度适配
                     //目前getLandmarkOrigin会获得原始的坐标，所以只需要横屏适配好其他的角度就不用适配了，因为texture和preview的角度关系是固定的
                     ArrayList<FloatBuffer> triangleVBList = new ArrayList<FloatBuffer>();
+
+                    //faces[c].points.length为关键点个数
+                    //Log.d("cunxie_faces[c].points.length", String.valueOf(faces[c].points.length));
+
                     for (int i = 0; i < faces[c].points.length; i++) {
+                        Log.d("points_", "onPreviewFrame: ");
                         float x = (faces[c].points[i].x / width) * 2 - 1;
+
+                        //Log.d("cunxie_x", String.valueOf(x));
+
                         if (isBackCamera)
                             x = -x;
                         float y = (faces[c].points[i].y / height) * 2-1;
+
+                        //Log.d("cunxie_y", String.valueOf(y));
+
                         float[] pointf = new float[]{y, x, 0.0f};
                         FloatBuffer fb = mCameraMatrix.floatBufferUtil(pointf);
-                        triangleVBList.add(fb);
+
+                        //每只眼睛9个特征点
+                        //0~8为图中右眼（实际左眼）
+                        //9~17为图中左眼（实际右眼）
+                        //0与9为左右眼区域中心（非瞳孔中心）
+
+                        if (i < 18) {
+                            triangleVBList.add(fb);
+                        }
                     }
 
 

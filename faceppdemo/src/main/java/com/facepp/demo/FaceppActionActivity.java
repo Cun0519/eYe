@@ -348,6 +348,7 @@ public class FaceppActionActivity extends Activity implements OnClickListener {
             }
             onclickImageItem(7, isFaceCompare);
         } else if (ID == R.id.landmark_enterBtn) {
+            //按键：检测人脸
             min_face_size = (int) Long.parseLong(editItemTexts[0].getText().toString());
             detection_interval = (int) Long.parseLong(editItemTexts[2].getText().toString());
             Log.w("ceshi", "min_face_size===" + min_face_size + ", " + detection_interval);
@@ -391,6 +392,7 @@ public class FaceppActionActivity extends Activity implements OnClickListener {
             faceActionInfo.trackModel = editItemTexts[4].getText().toString().trim();
             faceActionInfo.isFaceCompare = isFaceCompare;
 
+            //进入OpenglActivity
             startActivityForResult(new Intent(FaceppActionActivity.this, OpenglActivity.class).putExtra("FaceAction", faceActionInfo),101);
         }
     }

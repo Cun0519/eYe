@@ -383,19 +383,19 @@ public class OpenglActivity extends Activity
                     //0.4.7之前（包括）jni把所有角度的点算到竖直的坐标，所以外面画点需要再调整回来，才能与其他角度适配
                     //目前getLandmarkOrigin会获得原始的坐标，所以只需要横屏适配好其他的角度就不用适配了，因为texture和preview的角度关系是固定的
                     ArrayList<FloatBuffer> triangleVBList = new ArrayList<FloatBuffer>();
+                    int r_center, r_right, r_top, r_left, r_bottom, l_center, l_right, l_top, l_left, l_bottom;
 
                     //faces[c].points.length为关键点个数
                     //Log.d("cunxie_faces[c].points.length", String.valueOf(faces[c].points.length));
 
                     for (int i = 0; i < faces[c].points.length; i++) {
-                        Log.d("points_", "onPreviewFrame: ");
                         float x = (faces[c].points[i].x / width) * 2 - 1;
 
                         //Log.d("cunxie_x", String.valueOf(x));
 
                         if (isBackCamera)
                             x = -x;
-                        float y = (faces[c].points[i].y / height) * 2-1;
+                        float y = (faces[c].points[i].y / height) * 2 - 1;
 
                         //Log.d("cunxie_y", String.valueOf(y));
 
@@ -407,11 +407,32 @@ public class OpenglActivity extends Activity
                         //9~17为图中左眼（实际右眼）
                         //0与9为左右眼区域中心（非瞳孔中心）
 
-                        if (i < 18) {
+                        if (i >= 0 && i <= 4 || i >= 9 && i <= 13) {
                             triangleVBList.add(fb);
                         }
-                    }
 
+                    }
+                    r_center = (int)faces[c].points[0].x;
+                    r_top = (int)faces[c].points[1].y;
+                    r_bottom = (int)faces[c].points[2].y;
+                    r_right = (int)faces[c].points[3].x;
+                    r_left = (int)faces[c].points[4].x;
+                    l_center = (int)faces[c].points[9].x;
+                    l_top = (int)faces[c].points[10].y;
+                    l_bottom = (int)faces[c].points[11].y;
+                    l_right = (int)faces[c].points[12].x;
+                    l_left = (int)faces[c].points[13].x;
+
+                    //如果正对屏幕（在可接受的倾斜角度范围内）
+                    if (Math.abs(r_center - l_center) <= 30) {
+                        //勾勒眼部区域
+                        Rect r_EyeRect = new Rect(r_left, r_top, r_right, r_bottom);
+                        FloatBuffer r_floatBuffer = calRectPostion(r_EyeRect, mICamera.cameraWidth, mICamera.cameraHeight);
+                        rectsOpengl.add(r_floatBuffer);
+                        Rect l_EyeRect = new Rect(l_left, l_top, l_right, l_bottom);
+                        FloatBuffer l_floatBuffer = calRectPostion(l_EyeRect, mICamera.cameraWidth, mICamera.cameraHeight);
+                        rectsOpengl.add(l_floatBuffer);
+                    }
 
                     pointsOpengl.add(triangleVBList);
 
@@ -706,6 +727,7 @@ public class OpenglActivity extends Activity
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
 
+        //绘制
         mPointsMatrix.draw(mMVPMatrix);
 
         if (isDebug) {

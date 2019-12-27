@@ -180,6 +180,7 @@ public class PointsMatrix {
 
 		GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 
+		//画点
 		if (!isFaceCompare&&!isShowFaceRect){    //这里在绘制判断，需要调用api判断
 			synchronized (this) {
 				for (int i = 0; i < points.size(); i++) {
@@ -218,6 +219,7 @@ public class PointsMatrix {
 		}
 
 
+		//画框
 		synchronized (this){
 			if (faceRects != null && faceRects.size()>0){
 				GLES20.glLineWidth(4.0f);

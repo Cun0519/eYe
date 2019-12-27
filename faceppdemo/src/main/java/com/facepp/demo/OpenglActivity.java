@@ -1,7 +1,10 @@
 package com.facepp.demo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -10,16 +13,21 @@ import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.opengl.GLES20;
+import android.opengl.GLException;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.Matrix;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -42,8 +50,16 @@ import com.facepp.demo.util.Screen;
 import com.facepp.demo.util.SensorEventUtil;
 import com.megvii.facepp.sdk.Facepp;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -84,6 +100,8 @@ public class OpenglActivity extends Activity
 
     private MediaHelper mMediaHelper;
 
+    private boolean isScreenShot;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +123,28 @@ public class OpenglActivity extends Activity
         getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
         screenWidth = outMetrics.widthPixels;
         screenHeight = outMetrics.heightPixels;
+
+        Button screenShot = (Button) findViewById(R.id.screen_shot);
+        screenShot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //动态申请权限
+                //WRITE_EXTERNAL_STORAGE
+                if (Build.VERSION.SDK_INT >= 23) {
+                    int REQUEST_CODE = 777;
+                    String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                    //验证是否许可权限
+                    if (ContextCompat.checkSelfPermission(OpenglActivity.this, permission)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(OpenglActivity.this, "需要获取" + permission + "权限", Toast.LENGTH_SHORT).show();
+                        ActivityCompat.requestPermissions(OpenglActivity.this, new String[] {permission}, REQUEST_CODE);
+                    } else {
+                        Toast.makeText(OpenglActivity.this, "已经获取" + permission + "权限", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                isScreenShot = true;
+            }
+        });
 
     }
 
@@ -412,16 +452,27 @@ public class OpenglActivity extends Activity
                         }
 
                     }
+
                     r_center = (int)faces[c].points[0].x;
+                    l_center = (int)faces[c].points[9].x;
+
                     r_top = (int)faces[c].points[1].y;
                     r_bottom = (int)faces[c].points[2].y;
                     r_right = (int)faces[c].points[3].x;
                     r_left = (int)faces[c].points[4].x;
-                    l_center = (int)faces[c].points[9].x;
+
                     l_top = (int)faces[c].points[10].y;
                     l_bottom = (int)faces[c].points[11].y;
                     l_right = (int)faces[c].points[12].x;
                     l_left = (int)faces[c].points[13].x;
+
+                    //上下边框需要适当拉高以包含整个眼部区域
+                    int r_halfLonger = (int)((r_right - r_left) * 0.5);
+                    int l_halfLonger = (int)((l_right - l_left) * 0.5);
+                    r_right = r_right + r_halfLonger;
+                    r_left = r_left - r_halfLonger;
+                    l_right = l_right + l_halfLonger;
+                    l_left = l_left - l_halfLonger;
 
                     //如果正对屏幕（在可接受的倾斜角度范围内）
                     if (Math.abs(r_center - l_center) <= 30) {
@@ -712,6 +763,9 @@ public class OpenglActivity extends Activity
     private final float[] mVMatrix = new float[16];
     private final float[] mRotationMatrix = new float[16];
 
+    private ByteBuffer mScreenShotBuffer;
+    private Bitmap mBitmap;
+
     @Override
     public void onDrawFrame(GL10 gl) {
 
@@ -729,6 +783,11 @@ public class OpenglActivity extends Activity
 
         //绘制
         mPointsMatrix.draw(mMVPMatrix);
+
+        //截图
+        if (isScreenShot) {
+            screenShot(gl);
+        }
 
         if (isDebug) {
             runOnUiThread(new Runnable() {
@@ -769,6 +828,7 @@ public class OpenglActivity extends Activity
         return rectf;
     }
 
+    //
     private FloatBuffer calRectPostion(Rect rect, float width, float height) {
         float top = 1 - (rect.top * 1.0f / height) * 2;
         float left = (rect.left * 1.0f / width) * 2 - 1;
@@ -799,6 +859,66 @@ public class OpenglActivity extends Activity
         return buffer;
     }
 
+    private void screenShot(GL10 gl) {
+        isScreenShot = false;
 
+        mScreenShotBuffer = ByteBuffer.allocate(screenWidth * screenHeight * 4);
+        mBitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888);
+
+        mScreenShotBuffer.rewind();
+
+        try {
+            gl.glReadPixels(0, 0, screenWidth, screenHeight, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, mScreenShotBuffer);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mScreenShotBuffer.rewind();
+                    mBitmap.copyPixelsFromBuffer(mScreenShotBuffer);
+                    saveImage(mBitmap);
+                }
+            }).start();
+        } catch (GLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int saveImage(Bitmap bmp) {
+        //生成文件夹路径
+        String root = "/sdcard";
+        String dirName = "/cunxie_Demo";
+        File appDir = new File(root, dirName);
+        if (!appDir.exists()) {
+            appDir.mkdirs();
+        }
+
+        //文件名为时间
+        long timeStamp = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String imageTime = sdf.format(new Date(timeStamp));
+        String fileName = "test" + ".jpg";
+
+        //获取文件
+        File file = new File(appDir, fileName);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1;
+    }
 
 }

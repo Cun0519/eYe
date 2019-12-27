@@ -74,8 +74,13 @@
         android:visibility="gone"
         />
 
-
-
+    <Button
+        android:id="@+id/screen_shot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Screen Shot"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
 
     <!--<ImageButton-->
         <!--android:layout_width="wrap_content"-->

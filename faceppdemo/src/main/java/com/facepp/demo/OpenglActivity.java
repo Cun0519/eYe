@@ -929,7 +929,7 @@ public class OpenglActivity extends Activity
         long timeStamp = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String imageTime = sdf.format(new Date(timeStamp));
-        String fileName = eye + "_" + imageTime + ".jpg";
+        String fileName = imageTime + "_" + eye + ".jpg";
 
         //获取文件
         File file = new File(appDir, fileName);

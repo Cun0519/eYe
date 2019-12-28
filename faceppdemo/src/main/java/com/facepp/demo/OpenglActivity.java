@@ -51,12 +51,10 @@ import com.facepp.demo.util.SensorEventUtil;
 import com.megvii.facepp.sdk.Facepp;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -369,6 +367,7 @@ public class OpenglActivity extends Activity
     long matrixTime;
     private int prefaceCount = 0;
 
+    private int r_center, r_right, r_top, r_left, r_bottom, l_center, l_right, l_top, l_left, l_bottom;
 
     @Override
     public void onPreviewFrame(final byte[] imgData, final Camera camera) {
@@ -423,7 +422,6 @@ public class OpenglActivity extends Activity
                     //0.4.7之前（包括）jni把所有角度的点算到竖直的坐标，所以外面画点需要再调整回来，才能与其他角度适配
                     //目前getLandmarkOrigin会获得原始的坐标，所以只需要横屏适配好其他的角度就不用适配了，因为texture和preview的角度关系是固定的
                     ArrayList<FloatBuffer> triangleVBList = new ArrayList<FloatBuffer>();
-                    int r_center, r_right, r_top, r_left, r_bottom, l_center, l_right, l_top, l_left, l_bottom;
 
                     //faces[c].points.length为关键点个数
                     //Log.d("cunxie_faces[c].points.length", String.valueOf(faces[c].points.length));
@@ -447,7 +445,7 @@ public class OpenglActivity extends Activity
                         //9~17为图中左眼（实际右眼）
                         //0与9为左右眼区域中心（非瞳孔中心）
 
-                        if (i >= 0 && i <= 4 || i >= 9 && i <= 13) {
+                        if (i == 0 || i == 9) {
                             triangleVBList.add(fb);
                         }
 
@@ -763,8 +761,8 @@ public class OpenglActivity extends Activity
     private final float[] mVMatrix = new float[16];
     private final float[] mRotationMatrix = new float[16];
 
-    private ByteBuffer mScreenShotBuffer;
-    private Bitmap mBitmap;
+    private ByteBuffer l_mScreenShotBuffer, r_mScreenShotBuffer;
+    private Bitmap l_mBitmap, r_mBitmap;
 
     @Override
     public void onDrawFrame(GL10 gl) {
@@ -786,15 +784,18 @@ public class OpenglActivity extends Activity
 
         //截图
         if (isScreenShot) {
-            screenShot(gl);
+            int[] leftEyeRect = new int[] { l_left, (mICamera.cameraHeight - l_bottom), l_right, (mICamera.cameraHeight - l_top)};
+            int[] rightEyeRect = new int[] { r_left, (mICamera.cameraHeight - r_bottom), r_right, (mICamera.cameraHeight - r_top)};
+            screenShot(gl, leftEyeRect, rightEyeRect);
         }
 
         if (isDebug) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    final long endTime = System.currentTimeMillis() - actionTime;
-                    debugPrinttext.setText("printTime: " + endTime);
+                    //final long endTime = System.currentTimeMillis() - actionTime;
+                    //debugPrinttext.setText("printTime: " + endTime);
+                    debugPrinttext.setText("l: " + l_left + " " + (mICamera.cameraHeight - l_bottom) + " " + l_right + " " + (mICamera.cameraHeight - l_top));
                 }
             });
         }
@@ -859,22 +860,51 @@ public class OpenglActivity extends Activity
         return buffer;
     }
 
-    private void screenShot(GL10 gl) {
+    private void screenShot(GL10 gl, int[] leftEyeRect, int[] rightEyeRect) {
+        //l_left, (mICamera.cameraHeight - l_bottom), l_right, (mICamera.cameraHeight - l_top)
+        //0为图中左眼
+        //1为图中右眼
+
         isScreenShot = false;
 
-        mScreenShotBuffer = ByteBuffer.allocate(screenWidth * screenHeight * 4);
-        mBitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888);
+        //图中左眼
+        int l_width = leftEyeRect[3] - leftEyeRect[1];
+        int l_height = leftEyeRect[2] - leftEyeRect[0];
+        int l_x = leftEyeRect[1];
+        int l_y = leftEyeRect[0];
+        //图中右眼
+        int r_width = rightEyeRect[3] - rightEyeRect[1];
+        int r_height = rightEyeRect[2] - rightEyeRect[0];
+        int r_x = rightEyeRect[1];
+        int r_y = rightEyeRect[0];
 
-        mScreenShotBuffer.rewind();
+        if (screenWidth != mICamera.cameraHeight) {
+            Log.d("cunxie", "不适配该相机分辨率");
+        }
+
+        l_mScreenShotBuffer = ByteBuffer.allocate(l_width * l_height * 4);
+        l_mScreenShotBuffer.position(0);
+        l_mScreenShotBuffer.rewind();
+        l_mBitmap = Bitmap.createBitmap(l_width, l_height, Bitmap.Config.ARGB_8888);
+
+        r_mScreenShotBuffer = ByteBuffer.allocate(r_width * r_height * 4);
+        r_mScreenShotBuffer.position(0);
+        r_mScreenShotBuffer.rewind();
+        r_mBitmap = Bitmap.createBitmap(r_width, r_height, Bitmap.Config.ARGB_8888);
 
         try {
-            gl.glReadPixels(0, 0, screenWidth, screenHeight, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, mScreenShotBuffer);
+            gl.glReadPixels(l_x, l_y, l_width, l_height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, l_mScreenShotBuffer);
+            l_mScreenShotBuffer.rewind();
+            gl.glReadPixels(r_x, r_y, r_width, r_height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, r_mScreenShotBuffer);
+            r_mScreenShotBuffer.rewind();
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    mScreenShotBuffer.rewind();
-                    mBitmap.copyPixelsFromBuffer(mScreenShotBuffer);
-                    saveImage(mBitmap);
+                    l_mBitmap.copyPixelsFromBuffer(l_mScreenShotBuffer);
+                    r_mBitmap.copyPixelsFromBuffer(r_mScreenShotBuffer);
+                    saveImage(l_mBitmap, "LLL");
+                    saveImage(r_mBitmap, "RRR");
                 }
             }).start();
         } catch (GLException e) {
@@ -882,7 +912,11 @@ public class OpenglActivity extends Activity
         }
     }
 
-    private int saveImage(Bitmap bmp) {
+    private int saveImage(Bitmap bmp, String eye) {
+
+        //翻转Bitmap
+        bmp = reverseImage(bmp);
+
         //生成文件夹路径
         String root = "/sdcard";
         String dirName = "/cunxie_Demo";
@@ -895,7 +929,7 @@ public class OpenglActivity extends Activity
         long timeStamp = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String imageTime = sdf.format(new Date(timeStamp));
-        String fileName = "test" + ".jpg";
+        String fileName = eye + "_" + imageTime + ".jpg";
 
         //获取文件
         File file = new File(appDir, fileName);
@@ -919,6 +953,16 @@ public class OpenglActivity extends Activity
             }
         }
         return -1;
+    }
+
+    private Bitmap reverseImage(Bitmap originBitmap) {
+        int w = originBitmap.getWidth();
+        int h = originBitmap.getHeight();
+        android.graphics.Matrix m = new android.graphics.Matrix();
+        //垂直翻转
+        m.setScale(1, -1);
+        Bitmap reverseBitmap = Bitmap.createBitmap(originBitmap, 0, 0, w, h, m, true);
+        return reverseBitmap;
     }
 
 }

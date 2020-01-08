@@ -3,7 +3,7 @@
     android:id="@+id/activity_rootRel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EEF3FA"
+    android:background="#ffffff"
     android:clickable="true"
     android:focusable="true" >
 
@@ -21,7 +21,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dip"
         android:scaleType="centerCrop"
-        android:src="@drawable/facepplogo" />
+        android:src="@drawable/icon" />
 
     <Button
         android:id="@+id/landmark_enterBtn"
@@ -350,13 +350,5 @@
             android:dividerHeight="1px" >
         </ListView>
     </RelativeLayout>
-
-    <include
-        android:layout_width="wrap_content"
-        android:layout_height="35dip"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        layout="@layout/power_layout"
-        android:visibility="visible" />
 
 </RelativeLayout>

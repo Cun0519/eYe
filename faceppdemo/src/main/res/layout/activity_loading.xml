@@ -47,12 +47,4 @@
         android:textSize="16sp"
         android:visibility="gone" />
 
-    <include
-        layout="@layout/power_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="35dip"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="visible" />
-
 </RelativeLayout>

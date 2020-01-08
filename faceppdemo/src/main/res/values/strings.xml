@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Face++ Demo</string>
+    <string name="app_name">eYe</string>
 
     <string name="record">录像</string>
     <string name="pose_3d">3D模型</string>
@@ -24,7 +24,7 @@
     <string name="normal">Normal</string>
     <string name="cancel">取消</string>
     <string name="select">去选择</string>
-    <string name="title">人脸识别演示</string>
+    <string name="title">eYe</string>
     <string name="auth_progress">正在联网授权中...</string>
     <string name="auth_fail">联网授权失败！请检查网络或找服务商</string>
     <string name="auth_bundle">请到官网申请并绑定applicationId(bundleid)</string>

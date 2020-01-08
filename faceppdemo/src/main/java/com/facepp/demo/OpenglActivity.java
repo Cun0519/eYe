@@ -901,22 +901,24 @@ public class OpenglActivity extends Activity
             gl.glReadPixels(r_x, r_y, r_width, r_height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, r_mScreenShotBuffer);
             r_mScreenShotBuffer.rewind();
 
+            l_mBitmap.copyPixelsFromBuffer(l_mScreenShotBuffer);
+            r_mBitmap.copyPixelsFromBuffer(r_mScreenShotBuffer);
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    l_mBitmap.copyPixelsFromBuffer(l_mScreenShotBuffer);
-                    r_mBitmap.copyPixelsFromBuffer(r_mScreenShotBuffer);
 
                     //调用k-means算法
                     Bitmap l_KMeansBitmap = new ImageCluster().kmeans(l_mBitmap, 3, 10);
                     Bitmap r_KMeansBitmap = new ImageCluster().kmeans(r_mBitmap, 3, 10);
 
+                    long timeStamp = System.currentTimeMillis();
                     //保存原始图片
-                    //saveImage(l_mBitmap, "L");
-                    //saveImage(r_mBitmap, "R");
+                    saveImage(l_mBitmap, timeStamp + "L");
+                    saveImage(r_mBitmap, timeStamp + "R");
                     //保存k-means后的图片
-                    saveImage(l_KMeansBitmap, "KL");
-                    saveImage(r_KMeansBitmap, "KR");
+                    saveImage(l_KMeansBitmap, timeStamp + "KL");
+                    saveImage(r_KMeansBitmap, timeStamp + "KR");
                 }
             }).start();
         } catch (GLException e) {
@@ -937,9 +939,7 @@ public class OpenglActivity extends Activity
             appDir.mkdirs();
         }
 
-        //文件名为时间
-        long timeStamp = System.currentTimeMillis();
-        String fileName = timeStamp + "_" + eye + ".jpg";
+        String fileName = eye + ".jpg";
 
         //获取文件
         File file = new File(appDir, fileName);

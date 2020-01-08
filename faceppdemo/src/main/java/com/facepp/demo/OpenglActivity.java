@@ -42,6 +42,7 @@ import com.facepp.demo.util.CameraMatrix;
 import com.facepp.demo.util.ConUtil;
 import com.facepp.demo.util.DialogUtil;
 import com.facepp.demo.util.ICamera;
+import com.facepp.demo.util.ImageCluster;
 import com.facepp.demo.util.MediaRecorderUtil;
 import com.facepp.demo.util.OpenGLDrawRect;
 import com.facepp.demo.util.OpenGLUtil;
@@ -99,6 +100,8 @@ public class OpenglActivity extends Activity
     private MediaHelper mMediaHelper;
 
     private boolean isScreenShot;
+
+    private boolean isDraw = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -445,7 +448,7 @@ public class OpenglActivity extends Activity
                         //9~17为图中左眼（实际右眼）
                         //0与9为左右眼区域中心（非瞳孔中心）
 
-                        if (i == 0 || i == 9) {
+                        if ((i == 0 || i == 9) && isDraw) {
                             triangleVBList.add(fb);
                         }
 
@@ -465,15 +468,15 @@ public class OpenglActivity extends Activity
                     l_left = (int)faces[c].points[13].x;
 
                     //上下边框需要适当拉高以包含整个眼部区域
-                    int r_halfLonger = (int)((r_right - r_left) * 0.5);
-                    int l_halfLonger = (int)((l_right - l_left) * 0.5);
+                    int r_halfLonger = (int)((r_right - r_left) * 0.3);
+                    int l_halfLonger = (int)((l_right - l_left) * 0.3);
                     r_right = r_right + r_halfLonger;
                     r_left = r_left - r_halfLonger;
                     l_right = l_right + l_halfLonger;
                     l_left = l_left - l_halfLonger;
 
                     //如果正对屏幕（在可接受的倾斜角度范围内）
-                    if (Math.abs(r_center - l_center) <= 30) {
+                    if (Math.abs(r_center - l_center) <= 30 && isDraw) {
                         //勾勒眼部区域
                         Rect r_EyeRect = new Rect(r_left, r_top, r_right, r_bottom);
                         FloatBuffer r_floatBuffer = calRectPostion(r_EyeRect, mICamera.cameraWidth, mICamera.cameraHeight);
@@ -903,8 +906,17 @@ public class OpenglActivity extends Activity
                 public void run() {
                     l_mBitmap.copyPixelsFromBuffer(l_mScreenShotBuffer);
                     r_mBitmap.copyPixelsFromBuffer(r_mScreenShotBuffer);
-                    saveImage(l_mBitmap, "LLL");
-                    saveImage(r_mBitmap, "RRR");
+
+                    //调用k-means算法
+                    Bitmap l_KMeansBitmap = new ImageCluster().kmeans(l_mBitmap, 3, 10);
+                    Bitmap r_KMeansBitmap = new ImageCluster().kmeans(r_mBitmap, 3, 10);
+
+                    //保存原始图片
+                    //saveImage(l_mBitmap, "L");
+                    //saveImage(r_mBitmap, "R");
+                    //保存k-means后的图片
+                    saveImage(l_KMeansBitmap, "KL");
+                    saveImage(r_KMeansBitmap, "KR");
                 }
             }).start();
         } catch (GLException e) {
@@ -927,9 +939,7 @@ public class OpenglActivity extends Activity
 
         //文件名为时间
         long timeStamp = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String imageTime = sdf.format(new Date(timeStamp));
-        String fileName = imageTime + "_" + eye + ".jpg";
+        String fileName = timeStamp + "_" + eye + ".jpg";
 
         //获取文件
         File file = new File(appDir, fileName);

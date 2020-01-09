@@ -129,7 +129,6 @@ public class ImageCluster {
     //设置新的中心
     public void setNewCenter() {
         for (int i = 0; i < centerSum.length; i++) {
-            System.out.println(i + ":" + centerSum[i].group + ":" + centerSum[i].r + ":" + centerSum[i].g + ":" + centerSum[i].b);
             //取平均值为新的中心
             center[i].r = (int) (centerSum[i].r / centerSum[i].group);
             center[i].g = (int) (centerSum[i].g / centerSum[i].group);
@@ -153,9 +152,11 @@ public class ImageCluster {
             }
         }
         //计算rgb值之和最小的group
-        double num = rgbSum[0]; //0为第一个数组下标
+        //0为第一个数组下标
+        double num = rgbSum[0];
         int flag = 0;
-        for (int i = 0; i < rgbSum.length; i++) { //开始循环一维数组
+        //开始循环一维数组
+        for (int i = 0; i < rgbSum.length; i++) {
             if (rgbSum[i] < num) {
                 num = rgbSum[i];
                 flag = i;

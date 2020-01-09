@@ -103,15 +103,15 @@ public class ImageCluster {
 
     //每个点进行分类
     private void clusterSet() {
-        int group = -1;
+        int group;
         double distance[] = new double[k];
         for (int i = 0; i < source.length; i++) {
             for (int j = 0; j < source[0].length; j++) {
-                //求出距离中心点最短的中心
+                //求出该点与各个中心之间的距离
                 for (int q = 0; q < center.length; q++) {
                     distance[q] = distance(center[q], source[i][j]);
                 }
-                //寻找该点最近的中心
+                //寻找距离该点最近的中心
                 group = minDistance(distance);
                 //把该点进行分类
                 source[i][j].group = group;
@@ -121,7 +121,6 @@ public class ImageCluster {
                 centerSum[group].b += source[i][j].b;
                 //这个就是用来统计聚类里有几个点
                 centerSum[group].group += 1;
-                group = -1;
             }
         }
     }
@@ -146,10 +145,9 @@ public class ImageCluster {
 
         Bitmap outputBitmap = bitmap.copy(bitmap.getConfig(), true);
 
-        for (int i = 0; i < source.length; i++) {
-            for (int j = 0; j < source[0].length; j++) {
-                rgbSum[source[i][j].group] += source[i][j].r + source[i][j].g + source[i][j].b;
-            }
+        //求各个group的rgb值之和
+        for (int i = 0; i < centerSum.length; i++) {
+            rgbSum[i] = centerSum[i].r + centerSum[i].g + centerSum[i].b;
         }
         //计算rgb值之和最小的group
         //0为第一个数组下标

@@ -794,7 +794,7 @@ public class OpenglActivity extends Activity
                 //截图区域
                 int[] leftEyeRect = new int[]{l_left, (mICamera.cameraHeight - l_bottom), l_right, (mICamera.cameraHeight - l_top)};
                 int[] rightEyeRect = new int[]{r_left, (mICamera.cameraHeight - r_bottom), r_right, (mICamera.cameraHeight - r_top)};
-                ScreenShot.screenShotProcess(gl, leftEyeRect, rightEyeRect);
+                new ScreenShot().screenShotProcess(gl, leftEyeRect, rightEyeRect);
                 isScreenShot = false;
             }
         }

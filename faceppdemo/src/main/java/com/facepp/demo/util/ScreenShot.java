@@ -11,12 +11,12 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class ScreenShot {
 
-    private static ByteBuffer l_mScreenShotBuffer, r_mScreenShotBuffer;
-    private static Bitmap l_mBitmap, r_mBitmap;
-    private static int l_width, l_height, l_x, l_y;
-    private static int r_width, r_height, r_x, r_y;
+    private ByteBuffer l_mScreenShotBuffer, r_mScreenShotBuffer;
+    private Bitmap l_mBitmap, r_mBitmap;
+    private int l_width, l_height, l_x, l_y;
+    private int r_width, r_height, r_x, r_y;
 
-    public static void screenShotProcess(GL10 gl, int[] leftEyeRect, int[] rightEyeRect) {
+    public void screenShotProcess(GL10 gl, int[] leftEyeRect, int[] rightEyeRect) {
         //l_left, (mICamera.cameraHeight - l_bottom), l_right, (mICamera.cameraHeight - l_top)
         //0为图中左眼
         //1为图中右眼
@@ -75,7 +75,7 @@ public class ScreenShot {
         }
     }
 
-    private static int saveImage(Bitmap bmp, String eye) {
+    private int saveImage(Bitmap bmp, String eye) {
 
         //翻转Bitmap
         bmp = reverseImage(bmp);
@@ -114,7 +114,7 @@ public class ScreenShot {
         return -1;
     }
 
-    private static Bitmap reverseImage(Bitmap originBitmap) {
+    private Bitmap reverseImage(Bitmap originBitmap) {
         int w = originBitmap.getWidth();
         int h = originBitmap.getHeight();
         android.graphics.Matrix m = new android.graphics.Matrix();

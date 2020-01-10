@@ -6,8 +6,8 @@ android {
     compileSdkVersion CompileSdkVersion
     buildToolsVersion BuildToolsVersion
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 25
+        minSdkVersion MinSdkVersion
+        targetSdkVersion TargetSdkVersion
         versionCode 1
         versionName "0.5.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -38,7 +38,10 @@ android {
         }
     }
 
-
+    packagingOptions {
+        exclude 'lib/armeabi-v7a/libMegviiFacepp-jni-0.5.2.so'
+        exclude 'lib/arm64-v8a/libMegviiFacepp-jni-0.5.2.so'
+    }
 }
 
 build.mustRunAfter clean
@@ -78,7 +81,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-    compile "com.android.support:appcompat-v7:${SupportLibraryVersion}"
 
 
 }

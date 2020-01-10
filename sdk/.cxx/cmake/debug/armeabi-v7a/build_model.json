@@ -1,0 +1,71 @@
+{
+  "variant": {
+    "module": {
+      "rootBuildGradleFolder": "/Users/xiecun/Documents/Graduation/eYe",
+      "sdkFolder": "/Users/xiecun/Library/Android/sdk",
+      "isNativeCompilerSettingsCacheEnabled": false,
+      "isBuildOnlyTargetAbiEnabled": true,
+      "splitsAbiFilterSet": [],
+      "intermediatesFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/build/intermediates",
+      "gradleModulePathName": ":sdk",
+      "moduleRootFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk",
+      "makeFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp/CMakeLists.txt",
+      "buildSystem": "CMAKE",
+      "compilerSettingsCacheFolder": "/Users/xiecun/Documents/Graduation/eYe/.cxx",
+      "cxxFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx",
+      "ndkFolder": "/Users/xiecun/Library/Android/sdk/ndk/20.1.5948944",
+      "ndkVersion": "20.1.5948944",
+      "ndkSupportedAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "cmakeToolchainFile": "."
+    },
+    "buildSystemArgumentList": [
+      "-DANDROID_ARM_NEON\u003dTRUE",
+      "-DANDROID_STL\u003dc++_static"
+    ],
+    "cFlagList": [],
+    "cppFlagsList": [],
+    "variantName": "debug",
+    "soFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/build/intermediates/cmake/debug/lib",
+    "objFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/build/intermediates/cmake/debug/obj",
+    "jsonFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug",
+    "gradleBuildOutputFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cxx/debug",
+    "isDebuggableEnabled": true,
+    "validAbiList": [
+      "ARMEABI_V7A",
+      "ARM64_V8A"
+    ],
+    "buildTargetSet": []
+  },
+  "abi": "ARMEABI_V7A",
+  "abiPlatformVersion": 16,
+  "cxxBuildFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/armeabi-v7a",
+  "jsonFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/armeabi-v7a/android_gradle_build.json",
+  "gradleBuildOutputFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cxx/debug/armeabi-v7a",
+  "objFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/build/intermediates/cmake/debug/obj/armeabi-v7a",
+  "buildCommandFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/armeabi-v7a/build_command.txt",
+  "buildOutputFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/armeabi-v7a/build_output.txt",
+  "modelOutputFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/armeabi-v7a/build_model.json",
+  "cmake": {
+    "cmakeListsWrapperFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cxx/debug/armeabi-v7a/CMakeLists.txt",
+    "toolchainWrapperFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cxx/debug/armeabi-v7a/android_gradle_build.toolchain.cmake",
+    "buildGenerationStateFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cxx/debug/armeabi-v7a/build_generation_state.json",
+    "cacheKeyFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cxx/debug/armeabi-v7a/compiler_cache_key.json",
+    "compilerCacheUseFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cxx/debug/armeabi-v7a/compiler_cache_use.json",
+    "compilerCacheWriteFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cxx/debug/armeabi-v7a/compiler_cache_write.json",
+    "toolchainSettingsFromCacheFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cxx/debug/armeabi-v7a/compiler_settings_cache.cmake",
+    "cmakeWrappingBaseFolder": "."
+  },
+  "jsonGenerationLoggingRecordFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/armeabi-v7a/json_generation_record.json",
+  "compileCommandsJsonFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/armeabi-v7a/compile_commands.json"
+}

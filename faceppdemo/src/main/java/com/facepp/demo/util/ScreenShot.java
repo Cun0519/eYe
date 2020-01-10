@@ -62,12 +62,20 @@ public class ScreenShot {
                     Bitmap r_KMeansBitmap = new ImageCluster().kmeans(r_mBitmap, 3, 10);
 
                     long timeStamp = System.currentTimeMillis();
+
+                    //保存灰色图像
+                    //测试openCV
+                    //saveImage(new ImageCV().convert2Grey(l_mBitmap), timeStamp + "GL");
+                    //saveImage(new ImageCV().convert2Grey(r_mBitmap), timeStamp + "GR");
+
                     //保存原始图片
                     saveImage(l_mBitmap, timeStamp + "L");
                     saveImage(r_mBitmap, timeStamp + "R");
+
                     //保存k-means后的图片
                     saveImage(l_KMeansBitmap, timeStamp + "KL");
                     saveImage(r_KMeansBitmap, timeStamp + "KR");
+                    
                 }
             }).start();
         } catch (GLException e) {

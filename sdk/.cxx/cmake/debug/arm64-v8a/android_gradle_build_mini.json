@@ -1,0 +1,26 @@
+{
+  "buildFiles": [
+    "/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/xiecun/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/arm64-v8a --target clean"
+  ],
+  "libraries": {
+    "facepp-Debug-arm64-v8a": {
+      "artifactName": "facepp",
+      "abi": "arm64-v8a",
+      "output": "/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp/../jniLibs/arm64-v8a/libMegviiFacepp-0.5.2.so"
+    },
+    "face_new-Debug-arm64-v8a": {
+      "artifactName": "face_new",
+      "abi": "arm64-v8a",
+      "output": "/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp/../jniLibs/arm64-v8a/libmegface-new.so"
+    },
+    "MegviiFacepp-jni-0.5.2-Debug-arm64-v8a": {
+      "artifactName": "MegviiFacepp-jni-0.5.2",
+      "buildCommand": "/Users/xiecun/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/arm64-v8a --target MegviiFacepp-jni-0.5.2",
+      "abi": "arm64-v8a",
+      "output": "/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/jniLibs/arm64-v8a/libMegviiFacepp-jni-0.5.2.so"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# ninja log v5
+0	915	0	CMakeFiles/MegviiFacepp-jni-0.5.2.dir/megvii_facepp_dynamic_jni.cpp.o	d067a4e8a10aaacf
+916	1090	0	/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/jniLibs/arm64-v8a/libMegviiFacepp-jni-0.5.2.so	9738193a106a2c29
+2	1006	0	CMakeFiles/MegviiFacepp-jni-0.5.2.dir/megvii_facepp_dynamic_jni.cpp.o	d067a4e8a10aaacf
+1006	1264	0	/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/jniLibs/arm64-v8a/libMegviiFacepp-jni-0.5.2.so	9738193a106a2c29
+2	719	0	CMakeFiles/MegviiFacepp-jni-0.5.2.dir/megvii_facepp_dynamic_jni.cpp.o	d067a4e8a10aaacf
+720	942	0	/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/jniLibs/arm64-v8a/libMegviiFacepp-jni-0.5.2.so	9738193a106a2c29

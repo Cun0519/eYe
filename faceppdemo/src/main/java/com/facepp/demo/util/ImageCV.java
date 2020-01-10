@@ -1,7 +1,6 @@
 package com.facepp.demo.util;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;

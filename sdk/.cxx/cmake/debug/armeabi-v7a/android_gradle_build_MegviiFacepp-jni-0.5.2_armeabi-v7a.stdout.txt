@@ -1,1 +1,9 @@
-ninja: no work to do.
+[1/2] Building CXX object CMakeFiles/MegviiFacepp-jni-0.5.2.dir/megvii_facepp_dynamic_jni.cpp.o
+/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp/megvii_facepp_dynamic_jni.cpp:15:5: warning: ignoring 'static' keyword on explicit template instantiation [-Wstatic-inline-explicit-instantiation]
+    static template<class point_t>
+    ^
+/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp/megvii_facepp_dynamic_jni.cpp:60:5: warning: 'static' is not permitted on a declaration of a type [-Wmissing-declarations]
+    static struct ApiHandle {
+    ^
+2 warnings generated.
+[2/2] Linking CXX shared library /Users/xiecun/Documents/Graduation/eYe/sdk/src/main/jniLibs/armeabi-v7a/libMegviiFacepp-jni-0.5.2.so

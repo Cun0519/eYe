@@ -70,6 +70,7 @@ public class ScreenShot {
                     //保存k-means后的图片
                     saveImage(l_KMeansBitmap, timeStamp + "KL");
                     saveImage(r_KMeansBitmap, timeStamp + "KR");
+
                 }
             }).start();
         } catch (GLException e) {

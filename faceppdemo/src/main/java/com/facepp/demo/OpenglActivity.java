@@ -52,6 +52,9 @@ import com.facepp.demo.util.ScreenShot;
 import com.facepp.demo.util.SensorEventUtil;
 import com.megvii.facepp.sdk.Facepp;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.OpenCVLoader;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -104,6 +107,14 @@ public class OpenglActivity extends Activity
 
     private boolean isDraw = false;
 
+    //openCV初始化的callback
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            super.onManagerConnected(status);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +122,8 @@ public class OpenglActivity extends Activity
         setContentView(R.layout.activity_opengl);
 
         init();
+        //初始化openCV
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, getApplicationContext(), mLoaderCallback);
 
         FaceCompareManager.instance().loadFeature(this);
         ConUtil.toggleHideyBar(this);

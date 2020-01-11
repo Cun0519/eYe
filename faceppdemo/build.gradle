@@ -67,5 +67,6 @@ dependencies {
 //    compile 'com.github.FacePlusPlus:MegviiFacepp-Android-SDK:0.4.7-gitpack'
     compile(name: 'MGLicenseManagerSDK-0.3.1', ext: 'aar')
     compile(name: 'MGFaceppSDK-0.5.2', ext: 'aar')
+    implementation project(path: ':openCVLibrary349')
     //    compile project(':sdk')
 }

@@ -70,10 +70,6 @@ public class ScreenShot {
                     //保存k-means后的图片
                     saveImage(l_KMeansBitmap, timeStamp + "KL");
                     saveImage(r_KMeansBitmap, timeStamp + "KR");
-
-                    //保存openCV处理后的图片
-                    saveImage(new ImageCV().removeSpot(l_KMeansBitmap), timeStamp + "CVKL");
-                    saveImage(new ImageCV().removeSpot(r_KMeansBitmap), timeStamp + "CVKR");
                 }
             }).start();
         } catch (GLException e) {

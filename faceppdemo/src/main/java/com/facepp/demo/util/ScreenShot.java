@@ -63,12 +63,7 @@ public class ScreenShot {
 
                     long timeStamp = System.currentTimeMillis();
 
-                    //保存灰色图像
-                    //测试openCV
-                    //saveImage(new ImageCV().convert2Grey(l_mBitmap), timeStamp + "GL");
-                    //saveImage(new ImageCV().convert2Grey(r_mBitmap), timeStamp + "GR");
-
-                    //保存原始图片
+                    //保存原始的图片
                     saveImage(l_mBitmap, timeStamp + "L");
                     saveImage(r_mBitmap, timeStamp + "R");
 
@@ -76,6 +71,9 @@ public class ScreenShot {
                     saveImage(l_KMeansBitmap, timeStamp + "KL");
                     saveImage(r_KMeansBitmap, timeStamp + "KR");
 
+                    //保存openCV处理后的图片
+                    saveImage(new ImageCV().removeSpot(l_KMeansBitmap), timeStamp + "CVKL");
+                    saveImage(new ImageCV().removeSpot(r_KMeansBitmap), timeStamp + "CVKR");
                 }
             }).start();
         } catch (GLException e) {

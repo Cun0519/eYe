@@ -8,6 +8,7 @@ import org.opencv.core.Mat;
 
 public class ImageCV {
 
+    //加载native lib
     static{
         System.loadLibrary("imagecv-native-lib");
     }

@@ -1,0 +1,14 @@
+Executable : /Users/xiecun/Library/Android/sdk/cmake/3.6.4111459/bin/cmake
+arguments : 
+-H/Users/xiecun/Documents/Graduation/eYe/faceppdemo
+-B/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/x86
+-DANDROID_ABI=x86
+-DANDROID_PLATFORM=android-16
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/xiecun/Documents/Graduation/eYe/faceppdemo/build/intermediates/cmake/debug/obj/x86
+-DCMAKE_BUILD_TYPE=Debug
+-DANDROID_NDK=/Users/xiecun/Library/Android/sdk/ndk/20.1.5948944
+-DCMAKE_TOOLCHAIN_FILE=/Users/xiecun/Library/Android/sdk/ndk/20.1.5948944/build/cmake/android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=/Users/xiecun/Library/Android/sdk/cmake/3.6.4111459/bin/ninja
+-GAndroid Gradle - Ninja
+jvmArgs : 
+

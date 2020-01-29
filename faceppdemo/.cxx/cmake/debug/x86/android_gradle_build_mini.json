@@ -1,0 +1,16 @@
+{
+  "buildFiles": [
+    "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/xiecun/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/x86 --target clean"
+  ],
+  "libraries": {
+    "imagecv-native-lib-Debug-x86": {
+      "artifactName": "imagecv-native-lib",
+      "buildCommand": "/Users/xiecun/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/x86 --target imagecv-native-lib",
+      "abi": "x86",
+      "output": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/build/intermediates/cmake/debug/obj/x86/libimagecv-native-lib.so"
+    }
+  }
+}

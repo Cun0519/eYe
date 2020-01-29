@@ -1,0 +1,69 @@
+{
+  "variant": {
+    "module": {
+      "rootBuildGradleFolder": "/Users/xiecun/Documents/Graduation/eYe",
+      "sdkFolder": "/Users/xiecun/Library/Android/sdk",
+      "isNativeCompilerSettingsCacheEnabled": false,
+      "isBuildOnlyTargetAbiEnabled": true,
+      "ideBuildTargetAbi": "arm64-v8a,armeabi-v7a,armeabi",
+      "splitsAbiFilterSet": [],
+      "intermediatesFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/build/intermediates",
+      "gradleModulePathName": ":faceppdemo",
+      "moduleRootFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo",
+      "makeFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/CMakeLists.txt",
+      "buildSystem": "CMAKE",
+      "compilerSettingsCacheFolder": "/Users/xiecun/Documents/Graduation/eYe/.cxx",
+      "cxxFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx",
+      "ndkFolder": "/Users/xiecun/Library/Android/sdk/ndk/20.1.5948944",
+      "ndkVersion": "20.1.5948944",
+      "ndkSupportedAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "cmakeToolchainFile": "."
+    },
+    "buildSystemArgumentList": [],
+    "cFlagList": [],
+    "cppFlagsList": [],
+    "variantName": "debug",
+    "soFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/build/intermediates/cmake/debug/lib",
+    "objFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/build/intermediates/cmake/debug/obj",
+    "jsonFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug",
+    "gradleBuildOutputFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cxx/debug",
+    "isDebuggableEnabled": true,
+    "validAbiList": [
+      "ARM64_V8A",
+      "ARMEABI_V7A"
+    ],
+    "buildTargetSet": []
+  },
+  "abi": "ARM64_V8A",
+  "abiPlatformVersion": 16,
+  "cxxBuildFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a",
+  "jsonFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a/android_gradle_build.json",
+  "gradleBuildOutputFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cxx/debug/arm64-v8a",
+  "objFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/build/intermediates/cmake/debug/obj/arm64-v8a",
+  "buildCommandFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a/build_command.txt",
+  "buildOutputFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a/build_output.txt",
+  "modelOutputFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a/build_model.json",
+  "cmake": {
+    "cmakeListsWrapperFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cxx/debug/arm64-v8a/CMakeLists.txt",
+    "toolchainWrapperFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cxx/debug/arm64-v8a/android_gradle_build.toolchain.cmake",
+    "buildGenerationStateFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cxx/debug/arm64-v8a/build_generation_state.json",
+    "cacheKeyFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cxx/debug/arm64-v8a/compiler_cache_key.json",
+    "compilerCacheUseFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cxx/debug/arm64-v8a/compiler_cache_use.json",
+    "compilerCacheWriteFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cxx/debug/arm64-v8a/compiler_cache_write.json",
+    "toolchainSettingsFromCacheFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cxx/debug/arm64-v8a/compiler_settings_cache.cmake",
+    "cmakeWrappingBaseFolder": "."
+  },
+  "jsonGenerationLoggingRecordFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a/json_generation_record.json",
+  "compileCommandsJsonFile": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a/compile_commands.json"
+}

@@ -61,6 +61,9 @@ public class ScreenShot {
                     Bitmap l_KMeansBitmap = new ImageCluster().kmeans(l_mBitmap, 3, 10);
                     Bitmap r_KMeansBitmap = new ImageCluster().kmeans(r_mBitmap, 3, 10);
 
+                    //进行一系列ImageCV操作
+                    new ImageCV().process(l_mBitmap, r_mBitmap);
+
                     long timeStamp = System.currentTimeMillis();
 
                     //保存原始的图片

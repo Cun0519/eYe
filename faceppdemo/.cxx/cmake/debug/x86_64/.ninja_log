@@ -1,0 +1,13 @@
+# ninja log v5
+0	31	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	dc79df93fa0a4f3b
+31	59	0	../../../../build/intermediates/cmake/debug/obj/x86_64/libnative-lib.so	5ad47b24629fb747
+0	56	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	dc79df93fa0a4f3b
+57	125	0	../../../../build/intermediates/cmake/debug/obj/x86_64/libnative-lib.so	5ad47b24629fb747
+1	60	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	dc79df93fa0a4f3b
+60	129	0	../../../../build/intermediates/cmake/debug/obj/x86_64/libnative-lib.so	5ad47b24629fb747
+1	67	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	dc79df93fa0a4f3b
+68	296	0	../../../../build/intermediates/cmake/debug/obj/x86_64/libnative-lib.so	5ad47b24629fb747
+1	354	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	dc79df93fa0a4f3b
+354	469	0	../../../../build/intermediates/cmake/debug/obj/x86_64/libnative-lib.so	5ad47b24629fb747
+1	53	0	CMakeFiles/imagecv-native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	da7ee0d28ca387
+53	120	0	../../../../build/intermediates/cmake/debug/obj/x86_64/libimagecv-native-lib.so	4080864f047b94a9

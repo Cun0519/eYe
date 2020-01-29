@@ -1,0 +1,16 @@
+{
+  "buildFiles": [
+    "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/xiecun/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a --target clean"
+  ],
+  "libraries": {
+    "imagecv-native-lib-Debug-arm64-v8a": {
+      "artifactName": "imagecv-native-lib",
+      "buildCommand": "/Users/xiecun/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a --target imagecv-native-lib",
+      "abi": "arm64-v8a",
+      "output": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/build/intermediates/cmake/debug/obj/arm64-v8a/libimagecv-native-lib.so"
+    }
+  }
+}

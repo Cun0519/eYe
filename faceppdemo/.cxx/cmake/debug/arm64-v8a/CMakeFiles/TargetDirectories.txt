@@ -1,0 +1,3 @@
+/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a/CMakeFiles/rebuild_cache.dir
+/Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/arm64-v8a/CMakeFiles/imagecv-native-lib.dir

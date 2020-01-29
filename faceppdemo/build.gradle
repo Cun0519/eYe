@@ -39,7 +39,11 @@ android {
     lintOptions {
         abortOnError false
     }
-
+    externalNativeBuild {
+        cmake {
+            path file('CMakeLists.txt')
+        }
+    }
 
 
     repositories {

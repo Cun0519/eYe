@@ -1,0 +1,16 @@
+{
+  "buildFiles": [
+    "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/xiecun/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/armeabi-v7a --target clean"
+  ],
+  "libraries": {
+    "imagecv-native-lib-Debug-armeabi-v7a": {
+      "artifactName": "imagecv-native-lib",
+      "buildCommand": "/Users/xiecun/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/xiecun/Documents/Graduation/eYe/faceppdemo/.cxx/cmake/debug/armeabi-v7a --target imagecv-native-lib",
+      "abi": "armeabi-v7a",
+      "output": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/build/intermediates/cmake/debug/obj/armeabi-v7a/libimagecv-native-lib.so"
+    }
+  }
+}

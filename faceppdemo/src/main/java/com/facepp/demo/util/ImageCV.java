@@ -24,9 +24,8 @@ public class ImageCV {
         init(originBitmap_l, originBitmap_r);
 
         //NDK处理过程
-        int test = imageCVProcess(originMat_Addr_l);
-        Log.d("jniTest", "process: " + test);
-        imageCVProcess(originMat_Addr_r);
+        int debugNum = imageCVProcess(originMat_Addr_r, originMat_Addr_r);
+        Log.d("imageCVProcess", "debugNum: " + debugNum);
     }
 
     private void init(Bitmap originBitmap_l, Bitmap originBitmap_r) {
@@ -46,5 +45,5 @@ public class ImageCV {
         originMat_Addr_r = originMat_r.getNativeObjAddr();
     }
 
-    private native int imageCVProcess(long mat_Addr);
+    private native int imageCVProcess(long mat_Addr_l, long mat_Addr_r);
 }

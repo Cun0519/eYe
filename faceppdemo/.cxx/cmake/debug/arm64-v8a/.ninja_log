@@ -15,3 +15,5 @@
 539	647	0	../../../../build/intermediates/cmake/debug/obj/arm64-v8a/libnative-lib.so	40eded0e09cbc73a
 0	49	0	CMakeFiles/imagecv-native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	ae617dc4ceceea12
 49	84	0	../../../../build/intermediates/cmake/debug/obj/arm64-v8a/libimagecv-native-lib.so	8b6d7f8b1ae76e18
+1	460	0	CMakeFiles/imagecv-native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	ae617dc4ceceea12
+460	538	0	../../../../build/intermediates/cmake/debug/obj/arm64-v8a/libimagecv-native-lib.so	8b6d7f8b1ae76e18

@@ -15,8 +15,23 @@ int kmeans(Mat inputImg);
 int removeConnectedComponents(Mat inputImg);
 Point2f fillConvexHulltoGetCentroid(Mat inputImg);
 
-JNIEXPORT jint JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNIEnv *, jobject, jlong, jlong) {
-    return 1;
+JNIEXPORT jint JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNIEnv *, jobject, jlong mat_Addr_l, jlong mat_Addr_r) {
+
+    //从Java获取Mat
+    Mat& originMat_l = *(Mat*)mat_Addr_l;
+    Mat& originMat_r = *(Mat*)mat_Addr_r;
+
+    //处理左眼
+    kmeans(originMat_l);
+    removeConnectedComponents(originMat_l);
+    Point2f centroid_l = fillConvexHulltoGetCentroid(originMat_l);
+
+    //处理右眼
+    kmeans(originMat_r);
+    removeConnectedComponents(originMat_r);
+    Point2f centroid_r = fillConvexHulltoGetCentroid(originMat_r);
+
+    return (int)(centroid_l.x + centroid_l.y + centroid_r.x + centroid_r.y);
 }
 
 //k-means

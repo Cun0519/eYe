@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (JJ)I
  */
 JNIEXPORT jint JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess
-  (JNIEnv *, jobject, jlong, jlong);
+  (JNIEnv *, jobject, jlong mat_Addr_l, jlong mat_Addr_r);
 
 #ifdef __cplusplus
 }

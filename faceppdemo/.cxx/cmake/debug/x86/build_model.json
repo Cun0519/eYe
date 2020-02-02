@@ -31,7 +31,9 @@
     },
     "buildSystemArgumentList": [],
     "cFlagList": [],
-    "cppFlagsList": [],
+    "cppFlagsList": [
+      "-std\u003dc++11 -frtti -fexceptions"
+    ],
     "variantName": "debug",
     "soFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/build/intermediates/cmake/debug/lib",
     "objFolder": "/Users/xiecun/Documents/Graduation/eYe/faceppdemo/build/intermediates/cmake/debug/obj",

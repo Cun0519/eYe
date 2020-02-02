@@ -15,12 +15,22 @@ android {
 
     defaultConfig {
         applicationId 'com.cunxie.eYe'
-        minSdkVersion 14
-        targetSdkVersion 25
+        minSdkVersion MinSdkVersion
+        targetSdkVersion TargetSdkVersion
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+                abiFilters 'armeabi-v7a', 'arm64-v8a'
+            }
+        }
+        ndk{
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
     }
     buildTypes {
         release {
@@ -52,7 +62,11 @@ android {
         }
     }
 
-//    sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/raw'] } }
+    sourceSets{
+        main{
+            jniLibs.srcDirs = ['src/main/jniLibs/libs']
+        }
+    }
 }
 
 

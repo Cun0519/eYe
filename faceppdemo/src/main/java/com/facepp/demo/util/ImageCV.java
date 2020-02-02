@@ -10,7 +10,7 @@ public class ImageCV {
 
     //加载native lib
     static{
-        System.loadLibrary("imagecv-native-lib");
+        System.loadLibrary("native-lib");
     }
 
     Bitmap outputBitmap_l, outputBitmap_r;

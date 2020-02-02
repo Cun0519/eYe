@@ -5,3 +5,5 @@
 108	206	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	515d76f46bc458b6
 0	72	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	8aff2a0534b23abc
 72	267	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	515d76f46bc458b6
+0	1807	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	8aff2a0534b23abc
+1808	1963	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	515d76f46bc458b6

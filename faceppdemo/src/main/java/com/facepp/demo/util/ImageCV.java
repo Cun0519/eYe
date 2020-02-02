@@ -24,7 +24,7 @@ public class ImageCV {
         init(originBitmap_l, originBitmap_r);
 
         //NDK处理过程
-        int debugNum = imageCVProcess(originMat_Addr_r, originMat_Addr_r);
+        int debugNum = imageCVProcess(originMat_Addr_l, originMat_Addr_r);
         Log.d("imageCVProcess", "debugNum: " + debugNum);
     }
 

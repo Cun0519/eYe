@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_facepp_demo_util_ImageCV
  * Method:    imageCVProcess
- * Signature: (JJ)I
+ * Signature: (JJ)[I
  */
-JNIEXPORT jint JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess
-  (JNIEnv *, jobject, jlong mat_Addr_l, jlong mat_Addr_r);
+JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess
+  (JNIEnv *, jobject, jlong, jlong);
 
 #ifdef __cplusplus
 }

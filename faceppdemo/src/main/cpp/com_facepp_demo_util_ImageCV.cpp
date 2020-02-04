@@ -3,10 +3,12 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <cmath>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/imgproc.hpp>
+
 
 using namespace std;
 using namespace cv;
@@ -15,7 +17,13 @@ int kmeans(Mat inputImg);
 int removeConnectedComponents(Mat inputImg);
 Point2f fillConvexHulltoGetCentroid(Mat inputImg);
 
-JNIEXPORT jint JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNIEnv *, jobject, jlong mat_Addr_l, jlong mat_Addr_r) {
+JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNIEnv * env, jobject, jlong mat_Addr_l, jlong mat_Addr_r) {
+
+    int size = 4;
+    //jintArray对象
+    jintArray returnArray = env -> NewIntArray(size);
+    //jint指针
+    jint *intArray = env -> GetIntArrayElements(returnArray, JNI_FALSE);
 
     //从Java获取Mat
     Mat& originMat_l = *(Mat*)mat_Addr_l;
@@ -25,13 +33,20 @@ JNIEXPORT jint JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNIEnv *
     kmeans(originMat_l);
     removeConnectedComponents(originMat_l);
     Point2f centroid_l = fillConvexHulltoGetCentroid(originMat_l);
+    intArray[0] = round(centroid_l.x);
+    intArray[1] = round(centroid_l.y);
 
     //处理右眼
     kmeans(originMat_r);
     removeConnectedComponents(originMat_r);
     Point2f centroid_r = fillConvexHulltoGetCentroid(originMat_r);
+    intArray[2] = round(centroid_r.x);
+    intArray[3] = round(centroid_r.y);
 
-    return (int)(centroid_l.x + centroid_l.y + centroid_r.x + centroid_r.y);
+    //把jint指针中的元素设置到jintArray对象中
+    env -> SetIntArrayRegion(returnArray, 0, size, intArray);
+
+    return returnArray;
 }
 
 //k-means

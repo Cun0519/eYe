@@ -57,10 +57,6 @@ public class ScreenShot {
                     l_mBitmap.copyPixelsFromBuffer(l_mScreenShotBuffer);
                     r_mBitmap.copyPixelsFromBuffer(r_mScreenShotBuffer);
 
-                    //调用k-means算法
-                    Bitmap l_KMeansBitmap = new ImageCluster().kmeans(l_mBitmap, 3, 10);
-                    Bitmap r_KMeansBitmap = new ImageCluster().kmeans(r_mBitmap, 3, 10);
-
                     //进行一系列ImageCV操作
                     new ImageCV().process(l_mBitmap, r_mBitmap);
 
@@ -69,10 +65,6 @@ public class ScreenShot {
                     //保存原始的图片
                     saveImage(l_mBitmap, timeStamp + "L");
                     saveImage(r_mBitmap, timeStamp + "R");
-
-                    //保存k-means后的图片
-                    saveImage(l_KMeansBitmap, timeStamp + "KL");
-                    saveImage(r_KMeansBitmap, timeStamp + "KR");
 
                 }
             }).start();

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
 
 public class ImageCV {
 
@@ -16,12 +17,14 @@ public class ImageCV {
     Bitmap outputBitmap_l, outputBitmap_r;
     Mat originMat_l, originMat_r;
     Mat outputMat_l, outputMat_r;
-
     long originMat_Addr_l, originMat_Addr_r;
 
     public void process(Bitmap originBitmap_l, Bitmap originBitmap_r) {
         //初始化
         init(originBitmap_l, originBitmap_r);
+
+        String path = "/sdcard/cunxie_Demo/dude.jpg";
+        Imgcodecs.imwrite(path, originMat_l);
 
         //NDK处理过程
         int[] centroid = imageCVProcess(originMat_Addr_l, originMat_Addr_r);

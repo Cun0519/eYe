@@ -60,15 +60,16 @@ public class ScreenShot {
                     long timeStamp = System.currentTimeMillis();
 
                     //保存原始的图片
-                    saveImage(l_mBitmap, timeStamp + "_L");
-                    saveImage(r_mBitmap, timeStamp + "_R");
+                    //saveImage(l_mBitmap, timeStamp + "_L");
+                    //saveImage(r_mBitmap, timeStamp + "_R");
 
                     //进行一系列ImageCV操作
-                    Bitmap[] cv_BitmapArray = new ImageCV().process(l_mBitmap, r_mBitmap);
+                    //获得虹膜中心坐标
+                    int[] pupilCenter = new ImageCV().process(l_mBitmap, r_mBitmap);
 
                     //保存ImageCV操作后的图片
-                    saveImage(cv_BitmapArray[0], timeStamp + "_CV_L");
-                    saveImage(cv_BitmapArray[1], timeStamp + "_CV_R");
+                    //saveImage(cv_BitmapArray[0], timeStamp + "_CV_L");
+                    //saveImage(cv_BitmapArray[1], timeStamp + "_CV_R");
 
                 }
             }).start();

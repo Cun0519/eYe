@@ -35,42 +35,51 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     Mat tempMat_L = *(Mat*)mat_Addr_L;
     Mat tempMat_R = *(Mat*)mat_Addr_R;
 
-    LOGD("ImageCV_NDK: %d %d %d", tempMat_L.ptr<Vec3b>(0)[0][0], tempMat_L.ptr<Vec3b>(0)[0][1], tempMat_L.ptr<Vec3b>(0)[0][2]);
-
     Mat inputImg_L = Mat(tempMat_L.rows, tempMat_L.cols, CV_8UC3);
     Mat inputImg_R = Mat(tempMat_R.rows, tempMat_R.cols, CV_8UC3);
 
-    for (int row = 0; row < tempMat_L.rows; row++) {
-        for (int col = 0; col < tempMat_L.cols; col++) {
-            inputImg_L.ptr<Vec3b>(row)[col][0] = tempMat_L.ptr<Vec3b>(tempMat_L.rows - row - 1)[col][0];
-            inputImg_L.ptr<Vec3b>(row)[col][1] = tempMat_L.ptr<Vec3b>(tempMat_L.rows - row - 1)[col][1];
-            inputImg_L.ptr<Vec3b>(row)[col][2] = tempMat_L.ptr<Vec3b>(tempMat_L.rows - row - 1)[col][2];
-        }
-    }
+    //将4通道Mat转换为3通道Mat
+    cvtColor(tempMat_L, inputImg_L, CV_RGBA2BGR);
+    cvtColor(tempMat_R, inputImg_R, CV_RGBA2BGR);
+    //上下翻转
+    flip(inputImg_L, inputImg_L, 0);
+    flip(inputImg_R, inputImg_R, 0);
+
+    //imwrite("/sdcard/cunxie_Demo/origin_L.jpg", inputImg_L);
+    //imwrite("/sdcard/cunxie_Demo/origin_R.jpg", inputImg_R);
 
     //完成初始化
     //----------------------------------------------------------------------------------------------
 
-    imwrite("/sdcard/cunxie_Demo/origin.jpg", inputImg_L);
-
     //处理左眼
     kmeans(inputImg_L);
+    //imwrite("/sdcard/cunxie_Demo/kmeans_L.jpg", inputImg_L);
     removeConnectedComponents(inputImg_L);
+    //imwrite("/sdcard/cunxie_Demo/removeConnectedComponents_L.jpg", inputImg_L);
     Point2f centroid_L = fillConvexHulltoGetCentroid(inputImg_L);
-    //四舍五入
+    //imwrite("/sdcard/cunxie_Demo/fillConvexHulltoGetCentroid_L.jpg", inputImg_L);
+    //四舍五入求得质心
     intArray[0] = round(centroid_L.x);
     intArray[1] = round(centroid_L.y);
+    //inputImg_L.ptr<Vec3b>(intArray[1])[intArray[0]][0] = 0;
+    //inputImg_L.ptr<Vec3b>(intArray[1])[intArray[0]][1] = 0;
+    //inputImg_L.ptr<Vec3b>(intArray[1])[intArray[0]][2] = 255;
+    //imwrite("/sdcard/cunxie_Demo/centroid_L.jpg", inputImg_L);
 
     //处理右眼
     kmeans(inputImg_R);
-    imwrite("/sdcard/cunxie_Demo/kmeans.jpg", inputImg_R);
+    //imwrite("/sdcard/cunxie_Demo/kmeans_R.jpg", inputImg_R);
     removeConnectedComponents(inputImg_R);
-    imwrite("/sdcard/cunxie_Demo/removeConnectedComponents.jpg", inputImg_R);
+    //imwrite("/sdcard/cunxie_Demo/removeConnectedComponents_R.jpg", inputImg_R);
     Point2f centroid_R = fillConvexHulltoGetCentroid(inputImg_R);
-    imwrite("/sdcard/cunxie_Demo/fillConvexHulltoGetCentroid.jpg", inputImg_R);
-    //四舍五入
+    //imwrite("/sdcard/cunxie_Demo/fillConvexHulltoGetCentroid_R.jpg", inputImg_R);
+    //四舍五入求得质心
     intArray[2] = round(centroid_R.x);
     intArray[3] = round(centroid_R.y);
+    //inputImg_R.ptr<Vec3b>(intArray[1])[intArray[0]][0] = 0;
+    //inputImg_R.ptr<Vec3b>(intArray[1])[intArray[0]][1] = 0;
+    //inputImg_R.ptr<Vec3b>(intArray[1])[intArray[0]][2] = 255;
+    //imwrite("/sdcard/cunxie_Demo/centroid_R.jpg", inputImg_R);
 
     //把jint指针中的元素设置到jintArray对象中
     env -> SetIntArrayRegion(returnArray, 0, size, intArray);

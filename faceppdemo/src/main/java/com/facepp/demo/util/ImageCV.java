@@ -1,6 +1,7 @@
 package com.facepp.demo.util;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.Log;
 
 import org.opencv.android.Utils;
@@ -14,45 +15,45 @@ public class ImageCV {
         System.loadLibrary("native-lib");
     }
 
-    Bitmap outputBitmap_l, outputBitmap_r;
-    Mat originMat_l, originMat_r;
-    Mat outputMat_l, outputMat_r;
+    private static final String TAG = "ImageCV";
 
-    public Bitmap[] process(Bitmap originBitmap_l, Bitmap originBitmap_r) {
+    Bitmap outputBitmap_L, outputBitmap_R;
+    Mat originMat_L, originMat_R;
+    Mat outputMat_L, outputMat_R;
+
+    public Bitmap[] process(Bitmap l_mBitmap, Bitmap r_mBitmap) {
 
         //返回值
         Bitmap[] returnBitmapArray = new Bitmap[2];
 
         //初始化
-        init(originBitmap_l, originBitmap_r);
+        init(l_mBitmap, r_mBitmap);
 
         //NDK处理过程
-        int[] centroid = imageCVProcess(originMat_l.getNativeObjAddr(), originMat_r.getNativeObjAddr());
+        int[] centroid = imageCVProcess(originMat_L.getNativeObjAddr(), originMat_L.getNativeObjAddr());
 
-        Utils.matToBitmap(originMat_l, outputBitmap_l);
-        Utils.matToBitmap(originMat_r, outputBitmap_r);
+        Utils.matToBitmap(originMat_L, outputBitmap_L);
+        Utils.matToBitmap(originMat_R, outputBitmap_R);
 
-        Log.d("imageCV", "\n" +
-                "centroid_L: " + centroid[0] + " " + centroid[1] + "\n" +
-                "centroid_R: " + centroid[2] + " " + centroid[3]);
+        Log.d(TAG, " centroid_L: " + centroid[0] + " " + centroid[1] + " centroid_R: " + centroid[2] + " " + centroid[3]);
 
-        returnBitmapArray[0] = outputBitmap_l;
-        returnBitmapArray[1] = outputBitmap_r;
+        returnBitmapArray[0] = outputBitmap_L;
+        returnBitmapArray[1] = outputBitmap_R;
 
         return returnBitmapArray;
     }
 
-    private void init(Bitmap originBitmap_l, Bitmap originBitmap_r) {
-        outputBitmap_l = originBitmap_l.copy(originBitmap_l.getConfig(), true);
-        outputBitmap_r = originBitmap_r.copy(originBitmap_r.getConfig(), true);
-        originMat_l = new Mat();
-        outputMat_l = new Mat();
-        originMat_r = new Mat();
-        outputMat_r = new Mat();
+    private void init(Bitmap l_mBitmap, Bitmap r_mBitmap) {
+        outputBitmap_L = l_mBitmap.copy(l_mBitmap.getConfig(), true);
+        outputBitmap_R = r_mBitmap.copy(r_mBitmap.getConfig(), true);
+        originMat_L = new Mat();
+        outputMat_L = new Mat();
+        originMat_R = new Mat();
+        outputMat_R = new Mat();
 
         //bitmap to mat
-        Utils.bitmapToMat(originBitmap_l, originMat_l);
-        Utils.bitmapToMat(originBitmap_r, originMat_r);
+        Utils.bitmapToMat(l_mBitmap, originMat_L);
+        Utils.bitmapToMat(r_mBitmap, originMat_R);
     }
 
     private native int[] imageCVProcess(long mat_Addr_l, long mat_Addr_r);

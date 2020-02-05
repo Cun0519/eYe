@@ -1,5 +1,6 @@
 #include "com_facepp_demo_util_ImageCV.h"
 
+#include <android/log.h>
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -9,6 +10,8 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/imgproc.hpp>
 
+#define LOG_TAG  "C_TAG"
+#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 
 using namespace std;
 using namespace cv;
@@ -17,8 +20,10 @@ int kmeans(Mat inputImg);
 int removeConnectedComponents(Mat inputImg);
 Point2f fillConvexHulltoGetCentroid(Mat inputImg);
 
-JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNIEnv * env, jobject, jlong mat_Addr_l, jlong mat_Addr_r) {
+JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNIEnv * env, jobject, jlong mat_Addr_L, jlong mat_Addr_R) {
 
+    //初始化步骤
+    //----------------------------------------------------------------------------------------------
     int size = 4;
     //返回值
     //jintArray对象
@@ -27,29 +32,48 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     jint *intArray = env -> GetIntArrayElements(returnArray, JNI_FALSE);
 
     //从Java获取Mat
-    Mat& inputImg_l = *(Mat*)mat_Addr_l;
-    Mat& inputImg_r = *(Mat*)mat_Addr_r;
+    Mat tempMat_L = *(Mat*)mat_Addr_L;
+    Mat tempMat_R = *(Mat*)mat_Addr_R;
+
+    LOGD("ImageCV_NDK: %d %d %d", tempMat_L.ptr<Vec3b>(0)[0][0], tempMat_L.ptr<Vec3b>(0)[0][1], tempMat_L.ptr<Vec3b>(0)[0][2]);
+
+    Mat inputImg_L = Mat(tempMat_L.rows, tempMat_L.cols, CV_8UC3);
+    Mat inputImg_R = Mat(tempMat_R.rows, tempMat_R.cols, CV_8UC3);
+
+    for (int row = 0; row < tempMat_L.rows; row++) {
+        for (int col = 0; col < tempMat_L.cols; col++) {
+            inputImg_L.ptr<Vec3b>(row)[col][0] = tempMat_L.ptr<Vec3b>(tempMat_L.rows - row - 1)[col][0];
+            inputImg_L.ptr<Vec3b>(row)[col][1] = tempMat_L.ptr<Vec3b>(tempMat_L.rows - row - 1)[col][1];
+            inputImg_L.ptr<Vec3b>(row)[col][2] = tempMat_L.ptr<Vec3b>(tempMat_L.rows - row - 1)[col][2];
+        }
+    }
+
+    //完成初始化
+    //----------------------------------------------------------------------------------------------
+
+    imwrite("/sdcard/cunxie_Demo/origin.jpg", inputImg_L);
 
     //处理左眼
-    kmeans(inputImg_l);
-    removeConnectedComponents(inputImg_l);
-    Point2f centroid_l = fillConvexHulltoGetCentroid(inputImg_l);
+    kmeans(inputImg_L);
+    removeConnectedComponents(inputImg_L);
+    Point2f centroid_L = fillConvexHulltoGetCentroid(inputImg_L);
     //四舍五入
-    intArray[0] = round(centroid_l.x);
-    intArray[1] = round(centroid_l.y);
+    intArray[0] = round(centroid_L.x);
+    intArray[1] = round(centroid_L.y);
 
     //处理右眼
-    kmeans(inputImg_r);
-    removeConnectedComponents(inputImg_r);
-    Point2f centroid_r = fillConvexHulltoGetCentroid(inputImg_r);
+    kmeans(inputImg_R);
+    imwrite("/sdcard/cunxie_Demo/kmeans.jpg", inputImg_R);
+    removeConnectedComponents(inputImg_R);
+    imwrite("/sdcard/cunxie_Demo/removeConnectedComponents.jpg", inputImg_R);
+    Point2f centroid_R = fillConvexHulltoGetCentroid(inputImg_R);
+    imwrite("/sdcard/cunxie_Demo/fillConvexHulltoGetCentroid.jpg", inputImg_R);
     //四舍五入
-    intArray[2] = round(centroid_r.x);
-    intArray[3] = round(centroid_r.y);
+    intArray[2] = round(centroid_R.x);
+    intArray[3] = round(centroid_R.y);
 
     //把jint指针中的元素设置到jintArray对象中
     env -> SetIntArrayRegion(returnArray, 0, size, intArray);
-
-    imwrite("/sdcard/cunxie_Demo/test.jpg", inputImg_r);
 
     return returnArray;
 }
@@ -266,7 +290,7 @@ Point2f fillConvexHulltoGetCentroid(Mat inputImg) {
     cvtColor(inputImg, grayImg, CV_BGR2GRAY);
 
     //Detected contours. Each contour is stored as a vector of points (e.g. std::vector<std::vector<cv::Point> >).
-    vector<vector<Point>> contours;
+    vector< vector <Point> > contours;
 
     //Contour retrieval mode
     int mode = RETR_CCOMP;
@@ -280,7 +304,7 @@ Point2f fillConvexHulltoGetCentroid(Mat inputImg) {
     CV_Assert(contours.size() > 0);
 
     //Output convex hull. It is either an integer vector of indices or vector of points. In the first case, the hull elements are 0-based indices of the convex hull points in the original array (since the set of convex hull points is a subset of the original point set). In the second case, hull elements are the convex hull points themselves.
-    vector<vector<Point>> hull(contours.size());
+    vector <vector <Point> > hull(contours.size());
 
     //填充凸包
 //    for (int i = 0; i < contours.size(); i++) {

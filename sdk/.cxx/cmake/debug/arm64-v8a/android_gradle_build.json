@@ -21,13 +21,13 @@
 			[
 				
 				{
-					"flags" : "  --target=aarch64-none-linux-android21 --gcc-toolchain=/Users/xiecun/Library/Android/sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/xiecun/Library/Android/sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -DMegviiFacepp_jni_0_5_2_EXPORTS -I. -I/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp -I/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security   -O0 -fno-limit-debug-info -fno-experimental-isel  -fPIC    -c ",
+					"flags" : "  --target=aarch64-none-linux-android --gcc-toolchain=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/sysroot  -DMegviiFacepp_jni_0_5_2_EXPORTS -I. -I/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp -I/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp/include -isystem /Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/sources/cxx-stl/llvm-libc++/include -isystem /Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/sources/android/support/include -isystem /Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/sources/cxx-stl/llvm-libc++abi/include  -isystem /Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11  -O0 -fno-limit-debug-info  -fPIC    -c ",
 					"src" : "/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp/megvii_facepp_dynamic_jni.cpp",
 					"workingDirectory" : "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/arm64-v8a"
 				}
 			],
 			"output" : "/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/jniLibs/arm64-v8a/libMegviiFacepp-jni-0.5.2.so",
-			"toolchain" : "4023136837233820662"
+			"toolchain" : "9908789721952656622"
 		},
 		"face_new-Debug-arm64-v8a" : 
 		{
@@ -35,7 +35,7 @@
 			"artifactName" : "face_new",
 			"buildType" : "debug",
 			"output" : "/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp/../jniLibs/arm64-v8a/libmegface-new.so",
-			"toolchain" : "4023136837233820662"
+			"toolchain" : "9908789721952656622"
 		},
 		"facepp-Debug-arm64-v8a" : 
 		{
@@ -43,15 +43,15 @@
 			"artifactName" : "facepp",
 			"buildType" : "debug",
 			"output" : "/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp/../jniLibs/arm64-v8a/libMegviiFacepp-0.5.2.so",
-			"toolchain" : "4023136837233820662"
+			"toolchain" : "9908789721952656622"
 		}
 	},
 	"toolchains" : 
 	{
-		"4023136837233820662" : 
+		"9908789721952656622" : 
 		{
-			"cCompilerExecutable" : "/Users/xiecun/Library/Android/sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
-			"cppCompilerExecutable" : "/Users/xiecun/Library/Android/sdk/ndk/20.1.5948944/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+			"cCompilerExecutable" : "/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
 		}
 	}
 }

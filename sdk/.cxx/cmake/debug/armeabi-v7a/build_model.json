@@ -13,11 +13,14 @@
       "buildSystem": "CMAKE",
       "compilerSettingsCacheFolder": "/Users/xiecun/Documents/Graduation/eYe/.cxx",
       "cxxFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx",
-      "ndkFolder": "/Users/xiecun/Library/Android/sdk/ndk/20.1.5948944",
-      "ndkVersion": "20.1.5948944",
+      "ndkFolder": "/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499",
+      "ndkVersion": "16.1.4479499",
       "ndkSupportedAbiList": [
+        "ARMEABI",
         "ARMEABI_V7A",
         "ARM64_V8A",
+        "MIPS",
+        "MIPS64",
         "X86",
         "X86_64"
       ],
@@ -48,7 +51,7 @@
     "buildTargetSet": []
   },
   "abi": "ARMEABI_V7A",
-  "abiPlatformVersion": 16,
+  "abiPlatformVersion": 14,
   "cxxBuildFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/armeabi-v7a",
   "jsonFile": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/armeabi-v7a/android_gradle_build.json",
   "gradleBuildOutputFolder": "/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cxx/debug/armeabi-v7a",

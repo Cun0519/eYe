@@ -20,31 +20,36 @@ Point2f fillConvexHulltoGetCentroid(Mat inputImg);
 JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNIEnv * env, jobject, jlong mat_Addr_l, jlong mat_Addr_r) {
 
     int size = 4;
+    //返回值
     //jintArray对象
     jintArray returnArray = env -> NewIntArray(size);
     //jint指针
     jint *intArray = env -> GetIntArrayElements(returnArray, JNI_FALSE);
 
     //从Java获取Mat
-    Mat& originMat_l = *(Mat*)mat_Addr_l;
-    Mat& originMat_r = *(Mat*)mat_Addr_r;
+    Mat& inputImg_l = *(Mat*)mat_Addr_l;
+    Mat& inputImg_r = *(Mat*)mat_Addr_r;
 
     //处理左眼
-    kmeans(originMat_l);
-    removeConnectedComponents(originMat_l);
-    Point2f centroid_l = fillConvexHulltoGetCentroid(originMat_l);
+    kmeans(inputImg_l);
+    removeConnectedComponents(inputImg_l);
+    Point2f centroid_l = fillConvexHulltoGetCentroid(inputImg_l);
+    //四舍五入
     intArray[0] = round(centroid_l.x);
     intArray[1] = round(centroid_l.y);
 
     //处理右眼
-    kmeans(originMat_r);
-    removeConnectedComponents(originMat_r);
-    Point2f centroid_r = fillConvexHulltoGetCentroid(originMat_r);
+    kmeans(inputImg_r);
+    removeConnectedComponents(inputImg_r);
+    Point2f centroid_r = fillConvexHulltoGetCentroid(inputImg_r);
+    //四舍五入
     intArray[2] = round(centroid_r.x);
     intArray[3] = round(centroid_r.y);
 
     //把jint指针中的元素设置到jintArray对象中
     env -> SetIntArrayRegion(returnArray, 0, size, intArray);
+
+    imwrite("/sdcard/cunxie_Demo/test.jpg", inputImg_r);
 
     return returnArray;
 }

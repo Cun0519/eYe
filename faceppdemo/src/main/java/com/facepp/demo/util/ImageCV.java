@@ -17,20 +17,29 @@ public class ImageCV {
     Bitmap outputBitmap_l, outputBitmap_r;
     Mat originMat_l, originMat_r;
     Mat outputMat_l, outputMat_r;
-    long originMat_Addr_l, originMat_Addr_r;
 
-    public void process(Bitmap originBitmap_l, Bitmap originBitmap_r) {
+    public Bitmap[] process(Bitmap originBitmap_l, Bitmap originBitmap_r) {
+
+        //返回值
+        Bitmap[] returnBitmapArray = new Bitmap[2];
+
         //初始化
         init(originBitmap_l, originBitmap_r);
 
-        String path = "/sdcard/cunxie_Demo/dude.jpg";
-        Imgcodecs.imwrite(path, originMat_l);
-
         //NDK处理过程
-        int[] centroid = imageCVProcess(originMat_Addr_l, originMat_Addr_r);
+        int[] centroid = imageCVProcess(originMat_l.getNativeObjAddr(), originMat_r.getNativeObjAddr());
+
+        Utils.matToBitmap(originMat_l, outputBitmap_l);
+        Utils.matToBitmap(originMat_r, outputBitmap_r);
+
         Log.d("imageCV", "\n" +
                 "centroid_L: " + centroid[0] + " " + centroid[1] + "\n" +
                 "centroid_R: " + centroid[2] + " " + centroid[3]);
+
+        returnBitmapArray[0] = outputBitmap_l;
+        returnBitmapArray[1] = outputBitmap_r;
+
+        return returnBitmapArray;
     }
 
     private void init(Bitmap originBitmap_l, Bitmap originBitmap_r) {
@@ -44,10 +53,6 @@ public class ImageCV {
         //bitmap to mat
         Utils.bitmapToMat(originBitmap_l, originMat_l);
         Utils.bitmapToMat(originBitmap_r, originMat_r);
-
-        //获取Mat地址
-        originMat_Addr_l = originMat_l.getNativeObjAddr();
-        originMat_Addr_r = originMat_r.getNativeObjAddr();
     }
 
     private native int[] imageCVProcess(long mat_Addr_l, long mat_Addr_r);

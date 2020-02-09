@@ -16,7 +16,7 @@
 using namespace std;
 using namespace cv;
 
-int kmeans(Mat inputImg);
+void kmeans(Mat inputImg);
 int removeConnectedComponents(Mat inputImg);
 Point2f fillConvexHulltoGetCentroid(Mat inputImg);
 
@@ -54,7 +54,8 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     //处理左眼
     kmeans(inputImg_L);
     //imwrite("/sdcard/cunxie_Demo/kmeans_L.jpg", inputImg_L);
-    removeConnectedComponents(inputImg_L);
+    int connectedComponentsCount_L = removeConnectedComponents(inputImg_L);
+    //LOGD("connectedComponentsCount_L: %d", connectedComponentsCount_L);
     //imwrite("/sdcard/cunxie_Demo/removeConnectedComponents_L.jpg", inputImg_L);
     Point2f centroid_L = fillConvexHulltoGetCentroid(inputImg_L);
     //imwrite("/sdcard/cunxie_Demo/fillConvexHulltoGetCentroid_L.jpg", inputImg_L);
@@ -69,7 +70,8 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     //处理右眼
     kmeans(inputImg_R);
     //imwrite("/sdcard/cunxie_Demo/kmeans_R.jpg", inputImg_R);
-    removeConnectedComponents(inputImg_R);
+    int connectedComponentsCount_R = removeConnectedComponents(inputImg_R);
+    //LOGD("connectedComponentsCount_R: %d", connectedComponentsCount_R);
     //imwrite("/sdcard/cunxie_Demo/removeConnectedComponents_R.jpg", inputImg_R);
     Point2f centroid_R = fillConvexHulltoGetCentroid(inputImg_R);
     //imwrite("/sdcard/cunxie_Demo/fillConvexHulltoGetCentroid_R.jpg", inputImg_R);
@@ -88,7 +90,7 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
 }
 
 //k-means
-int kmeans(Mat inputImg) {
+void kmeans(Mat inputImg) {
 
     CV_Assert(!inputImg.empty());
 
@@ -170,8 +172,6 @@ int kmeans(Mat inputImg) {
             }
         }
     }
-
-    return 1;
 }
 
 //去除连通区域

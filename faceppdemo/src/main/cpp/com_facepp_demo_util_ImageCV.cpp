@@ -19,6 +19,7 @@ using namespace cv;
 void kmeans(Mat inputImg);
 int removeConnectedComponents(Mat inputImg);
 Point2f fillConvexHulltoGetCentroid(Mat inputImg);
+void drawSearchingAre(Mat inputImg, Point2f centroid);
 
 JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNIEnv * env, jobject, jlong mat_Addr_L, jlong mat_Addr_R) {
 
@@ -340,4 +341,32 @@ Point2f fillConvexHulltoGetCentroid(Mat inputImg) {
 
     //返回质心
     return centroid;
+}
+
+void drawSearchingAre(Mat inputImg, Point2f centroid) {
+
+    //实际图像中
+    //虹膜区域左右一般无遮掩
+    //质心与瞳孔中心的横向误差较小
+    int searchingDis;
+    searchingDis = inputImg.cols / 10;
+    cout << searchingDis << endl;
+
+    int centroidX = round(centroid.x);
+    int centroidY = round(centroid.y);
+
+    int startPointX = centroidX - (searchingDis / 2);
+    int startPointY = centroidY - (searchingDis / 2);
+
+    for (int x = startPointX; x < startPointX + searchingDis; x++) {
+        for (int y = startPointY; y < startPointY + searchingDis; y++) {
+            inputImg.ptr<Vec3b>(y)[x][0] = 0;
+            inputImg.ptr<Vec3b>(y)[x][1] = 255;
+            inputImg.ptr<Vec3b>(y)[x][2] = 0;
+        }
+    }
+
+    //inputImg.ptr<Vec3b>(centroidY)[centroidX][0] = 255;
+    //inputImg.ptr<Vec3b>(centroidY)[centroidX][1] = 0;
+    //inputImg.ptr<Vec3b>(centroidY)[centroidX][2] = 0;
 }

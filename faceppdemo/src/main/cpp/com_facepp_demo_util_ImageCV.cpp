@@ -350,7 +350,6 @@ void drawSearchingAre(Mat inputImg, Point2f centroid) {
     //质心与瞳孔中心的横向误差较小
     int searchingDis;
     searchingDis = inputImg.cols / 10;
-    cout << searchingDis << endl;
 
     int centroidX = round(centroid.x);
     int centroidY = round(centroid.y);

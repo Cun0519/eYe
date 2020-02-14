@@ -18,12 +18,13 @@ using namespace cv;
 
 void kmeans(Mat inputImg);
 int removeConnectedComponents(Mat inputImg);
-Point2f fillConvexHulltoGetCentroid(Mat inputImg);
-void drawSearchingAre(Mat inputImg, Point2f centroid);
+Point2f fillConvexHulltoGetCentroid(Mat inputImg, Point2f searchingArea[]);
+
+void debugDrawSearchingAre(Mat inputImg, Point2f searchingArea[]);
 
 JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNIEnv * env, jobject, jlong mat_Addr_L, jlong mat_Addr_R) {
 
-    //初始化步骤
+    ////初始化步骤
     //----------------------------------------------------------------------------------------------
     int size = 4;
     //返回值
@@ -52,37 +53,57 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     //完成初始化
     //----------------------------------------------------------------------------------------------
 
-    //处理左眼
+
+
+    ////处理左眼
+
+    //k-means
     kmeans(inputImg_L);
     //imwrite("/sdcard/cunxie_Demo/kmeans_L.jpg", inputImg_L);
+
+    //去除连通区域
     int connectedComponentsCount_L = removeConnectedComponents(inputImg_L);
     //LOGD("connectedComponentsCount_L: %d", connectedComponentsCount_L);
     //imwrite("/sdcard/cunxie_Demo/removeConnectedComponents_L.jpg", inputImg_L);
-    Point2f centroid_L = fillConvexHulltoGetCentroid(inputImg_L);
+
+    //填充凸包获得质心
+    Point2f searchingArea_L[2];
+    Point2f centroid_L = fillConvexHulltoGetCentroid(inputImg_L, searchingArea_L);
     //imwrite("/sdcard/cunxie_Demo/fillConvexHulltoGetCentroid_L.jpg", inputImg_L);
+
+    //绘制搜索区域
+    debugDrawSearchingAre(inputImg_L, searchingArea_L);
+
     //四舍五入求得质心
     intArray[0] = round(centroid_L.x);
     intArray[1] = round(centroid_L.y);
-    //inputImg_L.ptr<Vec3b>(intArray[1])[intArray[0]][0] = 0;
-    //inputImg_L.ptr<Vec3b>(intArray[1])[intArray[0]][1] = 0;
-    //inputImg_L.ptr<Vec3b>(intArray[1])[intArray[0]][2] = 255;
-    //imwrite("/sdcard/cunxie_Demo/centroid_L.jpg", inputImg_L);
 
-    //处理右眼
+
+
+    ////处理右眼
+
+    //k-means
     kmeans(inputImg_R);
     //imwrite("/sdcard/cunxie_Demo/kmeans_R.jpg", inputImg_R);
+
+    //去除连通区域
     int connectedComponentsCount_R = removeConnectedComponents(inputImg_R);
     //LOGD("connectedComponentsCount_R: %d", connectedComponentsCount_R);
     //imwrite("/sdcard/cunxie_Demo/removeConnectedComponents_R.jpg", inputImg_R);
-    Point2f centroid_R = fillConvexHulltoGetCentroid(inputImg_R);
+
+    //填充凸包获得质心
+    Point2f searchingArea_R[2];
+    Point2f centroid_R = fillConvexHulltoGetCentroid(inputImg_R, searchingArea_R);
     //imwrite("/sdcard/cunxie_Demo/fillConvexHulltoGetCentroid_R.jpg", inputImg_R);
+
+    //绘制搜索区域
+    debugDrawSearchingAre(inputImg_R, searchingArea_R);
+
     //四舍五入求得质心
     intArray[2] = round(centroid_R.x);
     intArray[3] = round(centroid_R.y);
-    //inputImg_R.ptr<Vec3b>(intArray[1])[intArray[0]][0] = 0;
-    //inputImg_R.ptr<Vec3b>(intArray[1])[intArray[0]][1] = 0;
-    //inputImg_R.ptr<Vec3b>(intArray[1])[intArray[0]][2] = 255;
-    //imwrite("/sdcard/cunxie_Demo/centroid_R.jpg", inputImg_R);
+
+
 
     //把jint指针中的元素设置到jintArray对象中
     env -> SetIntArrayRegion(returnArray, 0, size, intArray);
@@ -285,13 +306,11 @@ int removeConnectedComponents(Mat inputImg) {
         }
     }
 
-    //cout << "第二轮连通域： " << nums_1 << endl;
-
     return nums_0 + nums_1;
 }
 
 //填充凸包
-Point2f fillConvexHulltoGetCentroid(Mat inputImg) {
+Point2f fillConvexHulltoGetCentroid(Mat inputImg, Point2f searchingArea[]) {
 
     CV_Assert(!inputImg.empty());
 
@@ -336,36 +355,28 @@ Point2f fillConvexHulltoGetCentroid(Mat inputImg) {
     centroid.x = sumX / contours[0].size();
     centroid.y = sumY / contours[0].size();
 
-    //cout << centroid.x << " " << centroid.y << endl;
-    //inputImg.at<Vec3b>(centroid.y, centroid.x) = Vec3b(0, 255, 0);
+    //计算瞳孔中心搜索区域的搜索长度
+    double searchingLength = sqrt(contourArea(contours[0])) / 4;
+    searchingArea[0].x = centroid.x - searchingLength / 2.0;
+    searchingArea[0].y = centroid.y - searchingLength / 2.0;
+    searchingArea[1].x = centroid.x + searchingLength / 2.0;
+    searchingArea[1].y = centroid.y + searchingLength / 2.0;
 
-    //返回质心
     return centroid;
+
 }
 
-void drawSearchingAre(Mat inputImg, Point2f centroid) {
 
-    //实际图像中
-    //虹膜区域左右一般无遮掩
-    //质心与瞳孔中心的横向误差较小
-    int searchingDis;
-    searchingDis = inputImg.cols / 10;
 
-    int centroidX = round(centroid.x);
-    int centroidY = round(centroid.y);
 
-    int startPointX = centroidX - (searchingDis / 2);
-    int startPointY = centroidY - (searchingDis / 2);
+void debugDrawSearchingAre(Mat inputImg, Point2f searchingArea[]) {
 
-    for (int x = startPointX; x < startPointX + searchingDis; x++) {
-        for (int y = startPointY; y < startPointY + searchingDis; y++) {
+    for (int x = round(searchingArea[0].x); x < round(searchingArea[1].x); x++) {
+        for (int y = round(searchingArea[0].y); y < round(searchingArea[1].y); y++) {
             inputImg.ptr<Vec3b>(y)[x][0] = 0;
             inputImg.ptr<Vec3b>(y)[x][1] = 255;
             inputImg.ptr<Vec3b>(y)[x][2] = 0;
         }
     }
 
-    //inputImg.ptr<Vec3b>(centroidY)[centroidX][0] = 255;
-    //inputImg.ptr<Vec3b>(centroidY)[centroidX][1] = 0;
-    //inputImg.ptr<Vec3b>(centroidY)[centroidX][2] = 0;
 }

@@ -73,6 +73,7 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
 
     //绘制搜索区域
     debugDrawSearchingAre(inputImg_L, searchingArea_L);
+    //imwrite("/sdcard/cunxie_Demo/debugDrawSearchingAre_L.jpg", inputImg_L);
 
     //四舍五入求得质心
     intArray[0] = round(centroid_L.x);
@@ -98,6 +99,7 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
 
     //绘制搜索区域
     debugDrawSearchingAre(inputImg_R, searchingArea_R);
+    //imwrite("/sdcard/cunxie_Demo/debugDrawSearchingAre_R.jpg", inputImg_R);
 
     //四舍五入求得质心
     intArray[2] = round(centroid_R.x);

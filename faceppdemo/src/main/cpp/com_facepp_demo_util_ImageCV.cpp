@@ -24,8 +24,10 @@ void debugDrawSearchingAre(Mat inputImg, Point2f searchingArea[]);
 
 JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNIEnv * env, jobject, jlong mat_Addr_L, jlong mat_Addr_R) {
 
-    ////初始化步骤
     //----------------------------------------------------------------------------------------------
+
+    ////初始化步骤
+
     int size = 4;
     //返回值
     //jintArray对象
@@ -50,10 +52,7 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     //imwrite("/sdcard/cunxie_Demo/origin_L.jpg", inputImg_L);
     //imwrite("/sdcard/cunxie_Demo/origin_R.jpg", inputImg_R);
 
-    //完成初始化
     //----------------------------------------------------------------------------------------------
-
-
 
     ////处理左眼
 
@@ -79,7 +78,7 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     intArray[0] = round(centroid_L.x);
     intArray[1] = round(centroid_L.y);
 
-
+    //----------------------------------------------------------------------------------------------
 
     ////处理右眼
 
@@ -105,7 +104,9 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     intArray[2] = round(centroid_R.x);
     intArray[3] = round(centroid_R.y);
 
+    //----------------------------------------------------------------------------------------------
 
+    ////返回数据
 
     //把jint指针中的元素设置到jintArray对象中
     env -> SetIntArrayRegion(returnArray, 0, size, intArray);

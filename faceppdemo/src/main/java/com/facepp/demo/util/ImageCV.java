@@ -30,7 +30,7 @@ public class ImageCV {
         //NDK处理过程
         int[] returnArray = imageCVProcess(originMat_L.getNativeObjAddr(), originMat_R.getNativeObjAddr());
 
-        Log.d(TAG, " centroid_L: " + returnArray[0] + " " + returnArray[1] + " centroid_R: " + returnArray[2] + " " + returnArray[3]);
+        Log.d(TAG, " center_L: " + returnArray[0] + " " + returnArray[1] + " center_R: " + returnArray[2] + " " + returnArray[3]);
 
         return returnArray;
     }

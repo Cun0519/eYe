@@ -60,8 +60,8 @@ public class ScreenShot {
                     long timeStamp = System.currentTimeMillis();
 
                     //保存原始的图片
-                    //saveImage(l_mBitmap, timeStamp + "_L");
-                    //saveImage(r_mBitmap, timeStamp + "_R");
+                    saveImage(l_mBitmap, timeStamp + "_L");
+                    saveImage(r_mBitmap, timeStamp + "_R");
 
                     //进行一系列ImageCV操作
                     //获得虹膜中心坐标

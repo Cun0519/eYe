@@ -38,7 +38,7 @@ public class FaceppActionActivity extends Activity implements OnClickListener {
 
     private int min_face_size = 40;  // 200
     private int detection_interval = 30; // 100
-    private String resolution = "640*480";
+    private String resolution = "1920*1080";
     private ArrayList<HashMap<String, Integer>> cameraSize;
     private RelativeLayout mListRel;
     private ListView mListView;

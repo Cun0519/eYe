@@ -46,8 +46,8 @@ public class ICamera {
 			else
 				cameraId = 1;
 
-			int width = 640;
-			int height = 480;
+			int width = 1920;
+			int height = 1080;
 
 			if (resolutionMap != null) {
 				width = resolutionMap.get("width");
@@ -145,6 +145,7 @@ public class ICamera {
 					HashMap<String, Integer> map = new HashMap<String, Integer>();
                     map.put("width", tmpSize.width);
                     map.put("height", tmpSize.height);
+                    /*
                     if (tmpSize.width==640&&tmpSize.height==480){
                         size.add(map);
                     }
@@ -154,6 +155,7 @@ public class ICamera {
                     if (tmpSize.width==1280&&tmpSize.height==720){
                         size.add(map);
                     }
+                    */
                     if (tmpSize.width==1920&&tmpSize.height==1080){
                         size.add(map);
                     }

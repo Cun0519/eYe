@@ -206,8 +206,8 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     //通过卷积定位瞳孔中心
     IrisCenterLocator locator_L;
     Point2i irisCenter_L = locator_L.localizeIrisCenter(eyeImg_L, searchingArea_L);
-    //Debug::debugDrawPoint(eyeImg_L, irisCenter_L);
-    //imwrite("/sdcard/cunxie_Demo/IrisCenterLocator_L.jpg", eyeImg_L);
+    Debug::debugDrawPoint(eyeImg_L, irisCenter_L);
+    imwrite("/sdcard/cunxie_Demo/IrisCenterLocator_L.jpg", eyeImg_L);
 
 
     //处理右眼
@@ -229,8 +229,8 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     //通过卷积定位瞳孔中心
     IrisCenterLocator locator_R;
     Point2i irisCenter_R = locator_R.localizeIrisCenter(eyeImg_R, searchingArea_R);
-    //Debug::debugDrawPoint(eyeImg_R, irisCenter_R);
-    //imwrite("/sdcard/cunxie_Demo/IrisCenterLocator_R.jpg", eyeImg_R);
+    Debug::debugDrawPoint(eyeImg_R, irisCenter_R);
+    imwrite("/sdcard/cunxie_Demo/IrisCenterLocator_R.jpg", eyeImg_R);
 
 
     //返回数据

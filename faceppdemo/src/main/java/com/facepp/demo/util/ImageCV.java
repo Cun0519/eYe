@@ -17,12 +17,30 @@ public class ImageCV {
 
     Mat originMat_L, originMat_R;
 
-    //求虹膜中心坐标
-    public int[] process(Bitmap l_mBitmap, Bitmap r_mBitmap) {
+    //Singleton
+    private volatile static ImageCV instance;
 
+    private ImageCV() {
         //初始化
         originMat_L = new Mat();
         originMat_R = new Mat();
+    }
+
+    public static ImageCV getInstance() {
+        if (instance == null) {
+            synchronized (ImageCV.class) {
+                if (instance == null) {
+                    instance = new ImageCV();
+                }
+            }
+        }
+
+        return instance;
+    }
+
+    //求虹膜中心坐标
+    public int[] process(Bitmap l_mBitmap, Bitmap r_mBitmap) {
+
         //bitmap to mat
         Utils.bitmapToMat(l_mBitmap, originMat_L);
         Utils.bitmapToMat(r_mBitmap, originMat_R);

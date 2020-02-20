@@ -3,6 +3,8 @@ package com.facepp.demo.util;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLException;
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,6 +12,27 @@ import java.nio.ByteBuffer;
 import javax.microedition.khronos.opengles.GL10;
 
 public class ScreenShot {
+
+    //Singleton
+    private volatile static ScreenShot instance;
+
+    private ScreenShot() {
+
+    }
+
+    public static ScreenShot getInstance() {
+        if (instance == null) {
+            synchronized (Screen.class) {
+                if (instance == null) {
+                    instance = new ScreenShot();
+                }
+            }
+        }
+
+        return instance;
+    }
+
+    private static final String TAG = "ScreenShot";
 
     private ByteBuffer l_mScreenShotBuffer, r_mScreenShotBuffer;
     private Bitmap l_mBitmap, r_mBitmap;
@@ -60,12 +83,12 @@ public class ScreenShot {
                     long timeStamp = System.currentTimeMillis();
 
                     //保存原始的图片
-                    saveImage(l_mBitmap, timeStamp + "_L");
-                    saveImage(r_mBitmap, timeStamp + "_R");
+                    //saveImage(l_mBitmap, timeStamp + "_L");
+                    //saveImage(r_mBitmap, timeStamp + "_R");
 
                     //进行一系列ImageCV操作
                     //获得虹膜中心坐标
-                    int[] pupilCenter = new ImageCV().process(l_mBitmap, r_mBitmap);
+                    int[] pupilCenter = ImageCV.getInstance().process(l_mBitmap, r_mBitmap);
 
                     //保存ImageCV操作后的图片
                     //saveImage(cv_BitmapArray[0], timeStamp + "_CV_L");

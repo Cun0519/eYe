@@ -99,8 +99,6 @@ public class OpenglActivity extends Activity
     private boolean isScreenShot;
 
     private boolean isDraw = false;
-    private int mRealScreenWidth;
-    private int mRealScreenHeight;
 
     //openCV初始化的callback
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -231,13 +229,6 @@ public class OpenglActivity extends Activity
         }
 
         imgIcon = (ImageView) findViewById(R.id.opengl_layout_icon);
-
-        //适配非1920*1080分辨率屏幕的设备
-        //API Level >= 17
-        DisplayMetrics metrics= new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
-        mRealScreenWidth = metrics.widthPixels;
-        mRealScreenHeight = metrics.heightPixels;
     }
 
 
@@ -796,6 +787,7 @@ public class OpenglActivity extends Activity
 
         //截图
         if (isScreenShot) {
+
             //截图区域
             int[] leftEyeRect = new int[]{l_left, (mICamera.cameraHeight - l_bottom), l_right, (mICamera.cameraHeight - l_top)};
             int[] rightEyeRect = new int[]{r_left, (mICamera.cameraHeight - r_bottom), r_right, (mICamera.cameraHeight - r_top)};

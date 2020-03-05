@@ -1,3 +1,5 @@
 # ninja log v5
 0	1847	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	81783ecdfa7fe7e6
 1848	2699	0	../../../../build/intermediates/cmake/debug/obj/arm64-v8a/libnative-lib.so	b54eb823afee70dd
+2	4181	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	81783ecdfa7fe7e6
+4181	4954	0	../../../../build/intermediates/cmake/debug/obj/arm64-v8a/libnative-lib.so	b54eb823afee70dd

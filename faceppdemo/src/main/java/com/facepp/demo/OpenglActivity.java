@@ -448,6 +448,8 @@ public class OpenglActivity extends Activity
                         //9~17为图中左眼（实际右眼）
                         //0与9为左右眼区域中心（非瞳孔中心）
 
+                        //triangleVBList.add(fb);
+
                         if ((i == 0 || i == 9) && isDraw) {
                             triangleVBList.add(fb);
                         }

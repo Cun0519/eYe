@@ -39,7 +39,10 @@ public class ScreenShot {
     private int l_width, l_height, l_x, l_y;
     private int r_width, r_height, r_x, r_y;
 
-    public void screenShotProcess(GL10 gl, int[] leftEyeRect, int[] rightEyeRect) {
+    public int[] screenShotProcess(GL10 gl, int[] leftEyeRect, int[] rightEyeRect) {
+
+        int[] pupilCenter = new int[4];
+
         //l_left, (mICamera.cameraHeight - l_bottom), l_right, (mICamera.cameraHeight - l_top)
         //0为图中左眼
         //1为图中右眼
@@ -72,33 +75,26 @@ public class ScreenShot {
             gl.glReadPixels(r_x, r_y, r_width, r_height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, r_mScreenShotBuffer);
             r_mScreenShotBuffer.rewind();
 
-            //比较耗时的操作
-            //放入新的线程中运行
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    l_mBitmap.copyPixelsFromBuffer(l_mScreenShotBuffer);
-                    r_mBitmap.copyPixelsFromBuffer(r_mScreenShotBuffer);
+            l_mBitmap.copyPixelsFromBuffer(l_mScreenShotBuffer);
+            r_mBitmap.copyPixelsFromBuffer(r_mScreenShotBuffer);
 
-                    long timeStamp = System.currentTimeMillis();
+            long timeStamp = System.currentTimeMillis();
 
-                    //保存原始的图片
-                    //saveImage(l_mBitmap, timeStamp + "_L");
-                    //saveImage(r_mBitmap, timeStamp + "_R");
+            //保存原始的图片
+            //saveImage(l_mBitmap, timeStamp + "_L");
+            //saveImage(r_mBitmap, timeStamp + "_R");
 
-                    //进行一系列ImageCV操作
-                    //获得虹膜中心坐标
-                    int[] pupilCenter = ImageCV.getInstance().process(l_mBitmap, r_mBitmap);
+            //进行一系列ImageCV操作
+            //获得虹膜中心坐标
+            pupilCenter = ImageCV.getInstance().process(l_mBitmap, r_mBitmap);
 
-                    //保存ImageCV操作后的图片
-                    //saveImage(cv_BitmapArray[0], timeStamp + "_CV_L");
-                    //saveImage(cv_BitmapArray[1], timeStamp + "_CV_R");
-
-                }
-            }).start();
+            //保存ImageCV操作后的图片
+            //saveImage(cv_BitmapArray[0], timeStamp + "_CV_L");
+            //saveImage(cv_BitmapArray[1], timeStamp + "_CV_R");
         } catch (GLException e) {
             e.printStackTrace();
         }
+        return pupilCenter;
     }
 
     private int saveImage(Bitmap bmp, String eye) {

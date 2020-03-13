@@ -582,6 +582,9 @@ Point2i IrisCenterLocator::convolutionCore(Mat grayImage, vector<Mat> templates,
     std::vector<float> bestCenterInEachLayerValue(convDiff.size());
     std::vector<cv::Mat1f> bestCenterInEachLayerSurrounding(convDiff.size());
 
+    int maxValue = 0;
+    int flag = 0;
+
     for (int it = 0; it < convDiff.size(); it++) {
         Mat1f sourceImage = convDiff[it];
         vector<Point2i> localMaximas = cve::imageLocalMaxima(sourceImage, 1, 1, -1, mask);
@@ -589,9 +592,15 @@ Point2i IrisCenterLocator::convolutionCore(Mat grayImage, vector<Mat> templates,
         bestCenterInEachLayerValue[it] = sourceImage(localMaximas[0].y, localMaximas[0].x);
         bestCenterInEachLayer[it] = localMaximas[0];
         bestCenterInEachLayerSurrounding[it] = croppedGray;
+
+        if (bestCenterInEachLayerValue[it] > maxValue) {
+            maxValue = bestCenterInEachLayerValue[it];
+            flag = it;
+        }
     }
 
     // find the best layer
+    /*
     int bestIndex = 0;
     float bestScore = -1.f;
     for (int i = 0; i < bestCenterInEachLayer.size(); i++) {
@@ -613,8 +622,9 @@ Point2i IrisCenterLocator::convolutionCore(Mat grayImage, vector<Mat> templates,
             bestIndex = i;
         }
     }
+     */
 
-    return bestCenterInEachLayer[2];
+    return bestCenterInEachLayer[flag];
 }
 /*
 void IrisCenterLocator::extractAccurateTemplateParametersFromMask(float returnValue[], Mat maskImage, Point2f irisCenter, float radius) {

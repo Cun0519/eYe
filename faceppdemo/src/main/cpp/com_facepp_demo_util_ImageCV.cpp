@@ -28,6 +28,7 @@ public:
     static void debugDrawAre(Mat inputImg, Point2i area[]);
     static void debugDrawPoint(Mat inputImg, Point2i point);
     static void debugShow(Mat img);
+    static void debugDrawCross(Mat inputImg, Point2i point);
 };
 
 
@@ -39,7 +40,7 @@ class IrisCenterLocalizationPreProcess {
 public:
     static void kmeans(Mat inputImg);
     static int removeConnectedComponents(Mat inputImg);
-    static Point2i fillConvexHulltoGetCentroid(Mat inputImg, Point2i searchingArea[]);
+    static Point2i getCentroid(Mat inputImg, Point2i searchingArea[]);
 };
 
 
@@ -200,13 +201,13 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
 
     //填充凸包获得质心
     Point2i searchingArea_L[2];
-    IrisCenterLocalizationPreProcess::fillConvexHulltoGetCentroid(inputImg_L, searchingArea_L);
-    //imwrite("/sdcard/cunxie_Demo/fillConvexHulltoGetCentroid_L.jpg", inputImg_L);
+    IrisCenterLocalizationPreProcess::getCentroid(inputImg_L, searchingArea_L);
+    //imwrite("/sdcard/cunxie_Demo/getCentroid_R.jpg", inputImg_L);
 
     //通过卷积定位瞳孔中心
     IrisCenterLocator locator_L;
     Point2i irisCenter_L = locator_L.localizeIrisCenter(eyeImg_L, searchingArea_L);
-    Debug::debugDrawPoint(eyeImg_L, irisCenter_L);
+    Debug::debugDrawCross(eyeImg_L, irisCenter_L);
     imwrite("/sdcard/cunxie_Demo/IrisCenterLocator_L.jpg", eyeImg_L);
 
 
@@ -223,13 +224,13 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
 
     //填充凸包获得质心
     Point2i searchingArea_R[2];
-    IrisCenterLocalizationPreProcess::fillConvexHulltoGetCentroid(inputImg_R, searchingArea_R);
-    //imwrite("/sdcard/cunxie_Demo/fillConvexHulltoGetCentroid_R.jpg", inputImg_R);
+    IrisCenterLocalizationPreProcess::getCentroid(inputImg_R, searchingArea_R);
+    //imwrite("/sdcard/cunxie_Demo/getCentroid_R.jpg", inputImg_R);
 
     //通过卷积定位瞳孔中心
     IrisCenterLocator locator_R;
     Point2i irisCenter_R = locator_R.localizeIrisCenter(eyeImg_R, searchingArea_R);
-    Debug::debugDrawPoint(eyeImg_R, irisCenter_R);
+    Debug::debugDrawCross(eyeImg_R, irisCenter_R);
     imwrite("/sdcard/cunxie_Demo/IrisCenterLocator_R.jpg", eyeImg_R);
 
 
@@ -245,6 +246,17 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     return returnArray;
 }
 
+
+
+
+/**
+ * Debug
+ */
+void Debug::debugDrawPoint(Mat inputImg, Point2i point) {
+    inputImg.ptr<Vec3b>(point.y)[point.x][0] = 0;
+    inputImg.ptr<Vec3b>(point.y)[point.x][1] = 255;
+    inputImg.ptr<Vec3b>(point.y)[point.x][2] = 0;
+}
 void Debug::debugDrawAre(Mat inputImg, Point2i area[]) {
 
     for (int x = area[0].x; x < area[1].x; x++) {
@@ -256,16 +268,18 @@ void Debug::debugDrawAre(Mat inputImg, Point2i area[]) {
     }
 
 }
-
-
-
-/**
- * Debug
- */
-void Debug::debugDrawPoint(Mat inputImg, Point2i point) {
-    inputImg.ptr<Vec3b>(point.y)[point.x][0] = 0;
-    inputImg.ptr<Vec3b>(point.y)[point.x][1] = 255;
-    inputImg.ptr<Vec3b>(point.y)[point.x][2] = 0;
+void Debug::debugDrawCross(Mat inputImg, Point2i point) {
+    int crossLength = 10;
+    for (int x = point.x - crossLength; x < point.x + crossLength; x++) {
+        inputImg.ptr<Vec3b>(point.y)[x][0] = 0;
+        inputImg.ptr<Vec3b>(point.y)[x][1] = 255;
+        inputImg.ptr<Vec3b>(point.y)[x][2] = 0;
+    }
+    for (int y = point.y - crossLength; y < point.y + crossLength; y++) {
+        inputImg.ptr<Vec3b>(y)[point.x][0] = 0;
+        inputImg.ptr<Vec3b>(y)[point.x][1] = 255;
+        inputImg.ptr<Vec3b>(y)[point.x][2] = 0;
+    }
 }
 
 
@@ -471,8 +485,8 @@ int IrisCenterLocalizationPreProcess::removeConnectedComponents(Mat inputImg) {
     return nums_0 + nums_1;
 }
 
-//填充凸包
-Point2i IrisCenterLocalizationPreProcess::fillConvexHulltoGetCentroid(Mat inputImg, Point2i searchingArea[]) {
+//获取质心区域
+Point2i IrisCenterLocalizationPreProcess::getCentroid(Mat inputImg, Point2i searchingArea[]) {
 
     CV_Assert(!inputImg.empty());
 
@@ -495,17 +509,12 @@ Point2i IrisCenterLocalizationPreProcess::fillConvexHulltoGetCentroid(Mat inputI
     CV_Assert(contours.size() > 0);
 
     //Output convex hull. It is either an integer vector of indices or vector of points. In the first case, the hull elements are 0-based indices of the convex hull points in the original array (since the set of convex hull points is a subset of the original point set). In the second case, hull elements are the convex hull points themselves.
-    vector <vector <Point> > hull(contours.size());
+    //vector <vector <Point> > hull(contours.size());
 
     //填充凸包
-//    for (int i = 0; i < contours.size(); i++) {
-//        //Finds the convex hull of a point set.
-//        convexHull(Mat(contours[i]), hull[i]);
-//        fillConvexPoly(inputImg, hull[i], Scalar(255, 255, 255), LINE_8);
-//    }
     //Finds the convex hull of a point set.
-    convexHull(Mat(contours[0]), hull[0]);
-    fillConvexPoly(inputImg, hull[0], Scalar(255, 255, 255), LINE_8);
+    //convexHull(Mat(contours[0]), hull[0]);
+    //fillConvexPoly(inputImg, hull[0], Scalar(255, 255, 255), LINE_8);
 
     //求质心
     int sumX = 0, sumY = 0;

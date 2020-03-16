@@ -78,71 +78,14 @@ public class ScreenShot {
             l_mBitmap.copyPixelsFromBuffer(l_mScreenShotBuffer);
             r_mBitmap.copyPixelsFromBuffer(r_mScreenShotBuffer);
 
-            long timeStamp = System.currentTimeMillis();
-
-            //保存原始的图片
-            //saveImage(l_mBitmap, timeStamp + "_L");
-            //saveImage(r_mBitmap, timeStamp + "_R");
-
             //进行一系列ImageCV操作
             //获得虹膜中心坐标
             pupilCenter = ImageCV.getInstance().process(l_mBitmap, r_mBitmap);
 
-            //保存ImageCV操作后的图片
-            //saveImage(cv_BitmapArray[0], timeStamp + "_CV_L");
-            //saveImage(cv_BitmapArray[1], timeStamp + "_CV_R");
         } catch (GLException e) {
             e.printStackTrace();
         }
         return pupilCenter;
     }
 
-    private int saveImage(Bitmap bmp, String eye) {
-
-        //翻转Bitmap
-        bmp = reverseImage(bmp);
-
-        //生成文件夹路径
-        String root = "/sdcard";
-        String dirName = "/cunxie_Demo";
-        File appDir = new File(root, dirName);
-        if (!appDir.exists()) {
-            appDir.mkdirs();
-        }
-
-        String fileName = eye + ".jpg";
-
-        //获取文件
-        File file = new File(appDir, fileName);
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
-            fos.close();
-
-            return 1;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return -1;
-    }
-
-    private Bitmap reverseImage(Bitmap originBitmap) {
-        int w = originBitmap.getWidth();
-        int h = originBitmap.getHeight();
-        android.graphics.Matrix m = new android.graphics.Matrix();
-        //垂直翻转
-        m.setScale(1, -1);
-        Bitmap reverseBitmap = Bitmap.createBitmap(originBitmap, 0, 0, w, h, m, true);
-        return reverseBitmap;
-    }
 }

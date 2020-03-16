@@ -158,6 +158,15 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
 
     //初始化
 
+    // 基于当前系统的当前日期/时间
+    time_t now = time(0);
+    // 把 now 转换为字符串形式
+    string time = ctime(&now);
+    string inputJpg_L = "/sdcard/cunxie_Demo/" + time + "_input_L.jpg";
+    string outputJpg_L = "/sdcard/cunxie_Demo/" + time + "_output_L.jpg";
+    string inputJpg_R = "/sdcard/cunxie_Demo/" + time + "_input_R.jpg";
+    string outputJpg_R = "/sdcard/cunxie_Demo/" + time + "_output_R.jpg";
+
     int size = 4;
     //返回值
     //jintArray对象
@@ -183,8 +192,8 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     Mat eyeImg_L = inputImg_L.clone();
     Mat eyeImg_R = inputImg_R.clone();
 
-    //imwrite("/sdcard/cunxie_Demo/origin_L.jpg", inputImg_L);
-    //imwrite("/sdcard/cunxie_Demo/origin_R.jpg", inputImg_R);
+    imwrite(inputJpg_L, inputImg_L);
+    imwrite(inputJpg_R, inputImg_R);
 
 
 
@@ -208,7 +217,7 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     IrisCenterLocator locator_L;
     Point2i irisCenter_L = locator_L.localizeIrisCenter(eyeImg_L, searchingArea_L);
     Debug::debugDrawCross(eyeImg_L, irisCenter_L);
-    imwrite("/sdcard/cunxie_Demo/IrisCenterLocator_L.jpg", eyeImg_L);
+    imwrite(outputJpg_L, eyeImg_L);
 
 
     //处理右眼
@@ -231,7 +240,7 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     IrisCenterLocator locator_R;
     Point2i irisCenter_R = locator_R.localizeIrisCenter(eyeImg_R, searchingArea_R);
     Debug::debugDrawCross(eyeImg_R, irisCenter_R);
-    imwrite("/sdcard/cunxie_Demo/IrisCenterLocator_R.jpg", eyeImg_R);
+    imwrite(outputJpg_R, eyeImg_R);
 
 
     //返回数据

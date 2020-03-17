@@ -9,6 +9,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/imgproc.hpp>
+#include <thread>
 
 #define LOG_TAG  "C_TAG"
 #define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
@@ -18,7 +19,7 @@ using namespace cv;
 
 //IrisCenterLocalization
 
-
+void mainProcess(Mat inputImg, string name, int returnValue[]);
 
 /**
  * Debug
@@ -184,10 +185,8 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     time_t now = time(0);
     // 把 now 转换为字符串形式
     string time = ctime(&now);
-    string inputJpg_L = "/sdcard/cunxie_Demo/" + time + "_input_L.jpg";
-    string outputJpg_L = "/sdcard/cunxie_Demo/" + time + "_output_L.jpg";
-    string inputJpg_R = "/sdcard/cunxie_Demo/" + time + "_input_R.jpg";
-    string outputJpg_R = "/sdcard/cunxie_Demo/" + time + "_output_R.jpg";
+    string nameL = "/sdcard/cunxie_Demo/" + time + "_L_";
+    string nameR = "/sdcard/cunxie_Demo/" + time + "_R_";
 
     int size = 4;
     //返回值
@@ -210,40 +209,19 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     flip(inputImg_L, inputImg_L, 0);
     flip(inputImg_R, inputImg_R, 0);
 
-    //保存原始眼部区域图像
-    Mat eyeImg_L = inputImg_L.clone();
-    Mat eyeImg_R = inputImg_R.clone();
-
-    imwrite(inputJpg_L, inputImg_L);
-    imwrite(inputJpg_R, inputImg_R);
-
-    //处理左眼
-    Point2i searchingArea_L[2];
-    Point2i massCenter_L = IrisCenterLocalizationPreProcess::preProcess(inputImg_L, searchingArea_L);
-
-    //通过卷积定位瞳孔中心
-    IrisCenterLocator locator_L;
-    Point2i irisCenter_L = locator_L.localizeIrisCenter(eyeImg_L, searchingArea_L);
-    Debug::debugDrawCross(eyeImg_L, irisCenter_L);
-    imwrite(outputJpg_L, eyeImg_L);
-
-
-    //处理右眼
-    Point2i searchingArea_R[2];
-    Point2i massCenter_R = IrisCenterLocalizationPreProcess::preProcess(inputImg_R, searchingArea_R);
-
-    //通过卷积定位瞳孔中心
-    IrisCenterLocator locator_R;
-    Point2i irisCenter_R = locator_R.localizeIrisCenter(eyeImg_R, searchingArea_R);
-    Debug::debugDrawCross(eyeImg_R, irisCenter_R);
-    imwrite(outputJpg_R, eyeImg_R);
-
+    //多线程计算双眼
+    int returnValue_L[2];
+    int returnValue_R[2];
+    thread t1(mainProcess, inputImg_L, nameL, returnValue_L);
+    thread t2(mainProcess, inputImg_R, nameR, returnValue_R);
+    t1.join();
+    t2.join();
 
     //返回数据
-    intArray[0] = irisCenter_L.x;
-    intArray[1] = irisCenter_L.y;
-    intArray[2] = irisCenter_R.x;
-    intArray[3] = irisCenter_R.y;
+    intArray[0] = returnValue_L[0];
+    intArray[1] = returnValue_L[1];
+    intArray[2] = returnValue_R[0];
+    intArray[3] = returnValue_R[1];
 
     //把jint指针中的元素设置到jintArray对象中
     env -> SetIntArrayRegion(returnArray, 0, size, intArray);
@@ -251,7 +229,25 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     return returnArray;
 }
 
+/**
+ * MainProcess
+ */
+void mainProcess(Mat inputImg, string name, int returnValue[]) {
 
+    Mat eyeImg = inputImg.clone();
+
+    //获取质心区域
+    Point2i searchingArea[2];
+    Point2i massCenter = IrisCenterLocalizationPreProcess::preProcess(inputImg, searchingArea);
+
+    //通过卷积定位瞳孔中心
+    IrisCenterLocator locator;
+    Point2i irisCenter = locator.localizeIrisCenter(eyeImg, searchingArea);
+    //Debug::debugDrawCross(eyeImg, irisCenter);
+
+    returnValue[0] = irisCenter.x;
+    returnValue[1] = irisCenter.y;
+}
 
 
 /**

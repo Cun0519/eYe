@@ -1,7 +1,7 @@
 # ninja log v5
-10	1383	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	62d7ea2e5a5279e1
-1383	1646	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	73601c89bbeb61e8
-6	2846	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	62d7ea2e5a5279e1
-2846	3148	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	73601c89bbeb61e8
-10	3854	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	62d7ea2e5a5279e1
-3854	4521	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	73601c89bbeb61e8
+0	4715	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	6ac0906d1c6ec90c
+4716	5052	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	aae21ec387019c1c
+3	6011	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	6ac0906d1c6ec90c
+6012	6244	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	aae21ec387019c1c
+1	2084	0	CMakeFiles/native-lib.dir/src/main/cpp/com_facepp_demo_util_ImageCV.cpp.o	6ac0906d1c6ec90c
+2084	2410	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	aae21ec387019c1c

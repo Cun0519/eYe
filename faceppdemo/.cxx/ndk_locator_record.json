@@ -1,5 +1,5 @@
 {
-  "ndkFolder": "/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499",
+  "ndkFolder": "/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669",
   "messages": [
     {
       "level": "INFO",
@@ -7,7 +7,7 @@
     },
     {
       "level": "INFO",
-      "message": "ndk.dir in local.properties is /Users/xiecun/Library/Android/sdk/ndk/16.1.4479499"
+      "message": "ndk.dir in local.properties is /Users/xiecun/Library/Android/sdk/ndk/21.0.6113669"
     },
     {
       "level": "INFO",
@@ -19,7 +19,7 @@
     },
     {
       "level": "INFO",
-      "message": "Considering /Users/xiecun/Library/Android/sdk/ndk/16.1.4479499 by ndk.dir"
+      "message": "Considering /Users/xiecun/Library/Android/sdk/ndk/21.0.6113669 by ndk.dir"
     },
     {
       "level": "INFO",
@@ -39,7 +39,7 @@
     },
     {
       "level": "INFO",
-      "message": "Found requested ndk.dir (/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499) which has version 16.1.4479499"
+      "message": "Found requested ndk.dir (/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669) which has version 21.0.6113669"
     }
   ]
 }

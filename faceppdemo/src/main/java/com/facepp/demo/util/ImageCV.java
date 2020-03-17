@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
 
 public class ImageCV {
 
@@ -45,10 +46,15 @@ public class ImageCV {
         Utils.bitmapToMat(l_mBitmap, originMat_L);
         Utils.bitmapToMat(r_mBitmap, originMat_R);
 
+        DebugCV.saveMat(originMat_L, "L_IN");
+        DebugCV.saveMat(originMat_R, "R_IN");
+
         //NDK处理过程
         int[] returnArray = imageCVProcess(originMat_L.getNativeObjAddr(), originMat_R.getNativeObjAddr());
 
-        //Log.d(TAG, " center_L: " + returnArray[0] + " " + returnArray[1] + " center_R: " + returnArray[2] + " " + returnArray[3]);
+        DebugCV.saveMat(originMat_L, returnArray[0], returnArray[1], "L_OUT");
+        DebugCV.saveMat(originMat_R, returnArray[2], returnArray[3], "R_OUT");
+        Log.d(TAG, " center_L: " + returnArray[0] + " " + returnArray[1] + " center_R: " + returnArray[2] + " " + returnArray[3]);
 
         return returnArray;
     }

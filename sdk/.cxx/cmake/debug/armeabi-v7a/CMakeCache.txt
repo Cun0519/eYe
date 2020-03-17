@@ -21,16 +21,16 @@ ANDROID_ABI:UNINITIALIZED=armeabi-v7a
 ANDROID_ARM_NEON:UNINITIALIZED=TRUE
 
 //No help, variable specified on the command line.
-ANDROID_NDK:UNINITIALIZED=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499
+ANDROID_NDK:UNINITIALIZED=/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669
 
 //No help, variable specified on the command line.
-ANDROID_PLATFORM:UNINITIALIZED=android-14
+ANDROID_PLATFORM:UNINITIALIZED=android-16
 
 //No help, variable specified on the command line.
 ANDROID_STL:UNINITIALIZED=c++_static
 
 //Archiver
-CMAKE_AR:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-ar
+CMAKE_AR:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-ar
 
 //Flags used by the compiler during all build types.
 CMAKE_ASM_FLAGS:STRING=
@@ -62,7 +62,7 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //Libraries linked by default with all C++ applications.
-CMAKE_CXX_STANDARD_LIBRARIES:STRING=-latomic -lm "/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a/libc++.a"
+CMAKE_CXX_STANDARD_LIBRARIES:STRING=-latomic -lm
 
 //Flags used by the compiler during all build types.
 CMAKE_C_FLAGS:STRING=
@@ -108,7 +108,7 @@ CMAKE_INSTALL_PREFIX:PATH=/usr/local
 CMAKE_LIBRARY_OUTPUT_DIRECTORY:UNINITIALIZED=/Users/xiecun/Documents/Graduation/eYe/sdk/build/intermediates/cmake/debug/obj/armeabi-v7a
 
 //Path to a program.
-CMAKE_LINKER:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-ld
+CMAKE_LINKER:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-ld
 
 //No help, variable specified on the command line.
 CMAKE_MAKE_PROGRAM:UNINITIALIZED=/Users/xiecun/Library/Android/sdk/cmake/3.6.4111459/bin/ninja
@@ -129,19 +129,19 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_NM:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-nm
+CMAKE_NM:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-nm
 
 //Path to a program.
-CMAKE_OBJCOPY:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-objcopy
+CMAKE_OBJCOPY:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-objcopy
 
 //Path to a program.
-CMAKE_OBJDUMP:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-objdump
+CMAKE_OBJDUMP:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-objdump
 
 //Value Computed by CMake
 CMAKE_PROJECT_NAME:STATIC=Project
 
 //Ranlib
-CMAKE_RANLIB:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-ranlib
+CMAKE_RANLIB:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-ranlib
 
 //Flags used by the linker during the creation of dll's.
 CMAKE_SHARED_LINKER_FLAGS:STRING=
@@ -181,10 +181,10 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_STRIP:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-strip
+CMAKE_STRIP:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-strip
 
 //The CMake toolchain file
-CMAKE_TOOLCHAIN_FILE:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/build/cmake/android.toolchain.cmake
+CMAKE_TOOLCHAIN_FILE:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669/build/cmake/android.toolchain.cmake
 
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
@@ -193,7 +193,7 @@ CMAKE_TOOLCHAIN_FILE:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
 //Dependencies for the target
-MegviiFacepp-jni-0.5.2_LIB_DEPENDS:STATIC=general;facepp;general;face_new;general;/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/platforms/android-14/arch-arm/usr/lib/liblog.so;
+MegviiFacepp-jni-0.5.2_LIB_DEPENDS:STATIC=general;facepp;general;face_new;general;/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/arm-linux-androideabi/16/liblog.so;
 
 //Value Computed by CMake
 Project_BINARY_DIR:STATIC=/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/debug/armeabi-v7a
@@ -202,7 +202,7 @@ Project_BINARY_DIR:STATIC=/Users/xiecun/Documents/Graduation/eYe/sdk/.cxx/cmake/
 Project_SOURCE_DIR:STATIC=/Users/xiecun/Documents/Graduation/eYe/sdk/src/main/cpp
 
 //Path to a library.
-log-lib:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/16.1.4479499/platforms/android-14/arch-arm/usr/lib/liblog.so
+log-lib:FILEPATH=/Users/xiecun/Library/Android/sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/arm-linux-androideabi/16/liblog.so
 
 
 ########################

@@ -38,9 +38,8 @@ public:
  */
 class IrisCenterLocalizationPreProcess {
 public:
-    static void kmeans(Mat inputImg);
-    static int removeConnectedComponents(Mat inputImg);
-    static Point2i getCentroid(Mat inputImg, Point2i searchingArea[]);
+    static Point2i preProcess(Mat inputImg, Point2i searchingArea[]);
+    static void qualityOptimization(Mat inputImg);
 };
 
 
@@ -125,6 +124,29 @@ namespace cve {
      @return a binary image containing only the largest blob
      */
     cv::Mat removeSmallBlobsExceptLargest(const cv::Mat & bwImage);
+
+    /**
+     Smart color image segmentation using iterative k-means clustering. This method will perform multiple binary k-means clustering on the "darker" part, so that the darkest part can be clearly seperated (e.g iris area).
+
+     @param image the image to be segmented
+     @param kmeansIterations level of segmentation. Default is 4.
+     @param coordinateWeight the weight factor for pixel adjacency. 0 will perform clustering purely be color, and higher coordinateWeight will weight more on pixel adjacency. Default is 0.4f
+     @param kmeansRepeats times of k-means repeating for each level. Default is 4.
+     @return a ranked image. higher value mean darker.
+     */
+    cv::Mat1b imageSegmentationViaIterativeKmeans(const cv::Mat& image, int kmeansIterations = 4, float coordinateWeight = 0.4f, int kmeansRepeats = 4);
+
+    /**
+     Fill the convex hulls in binary image.
+
+     @return concavity-filled binary image
+     */
+    cv::Mat fillConvexHulls(const cv::Mat & bwImage);
+
+    /**
+     return the mass center coordinates for the blobs in the given binary image.
+     */
+    std::vector<cv::Point2f> blobMassCenter(const cv::Mat & bwImage);
 }
 
 template<typename _Tp> cv::Rect_<_Tp> cve::CvRectMakeWithCenterPointAndSize(const cv::Point_<_Tp> & centerPoint, _Tp width, _Tp height) {
@@ -195,23 +217,9 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
     imwrite(inputJpg_L, inputImg_L);
     imwrite(inputJpg_R, inputImg_R);
 
-
-
     //处理左眼
-
-    //k-means
-    IrisCenterLocalizationPreProcess::kmeans(inputImg_L);
-    //imwrite("/sdcard/cunxie_Demo/kmeans_L.jpg", inputImg_L);
-
-    //去除连通区域
-    IrisCenterLocalizationPreProcess::removeConnectedComponents(inputImg_L);
-    //LOGD("connectedComponentsCount_L: %d", connectedComponentsCount_L);
-    //imwrite("/sdcard/cunxie_Demo/removeConnectedComponents_L.jpg", inputImg_L);
-
-    //填充凸包获得质心
     Point2i searchingArea_L[2];
-    IrisCenterLocalizationPreProcess::getCentroid(inputImg_L, searchingArea_L);
-    //imwrite("/sdcard/cunxie_Demo/getCentroid_R.jpg", inputImg_L);
+    Point2i massCenter_L = IrisCenterLocalizationPreProcess::preProcess(inputImg_L, searchingArea_L);
 
     //通过卷积定位瞳孔中心
     IrisCenterLocator locator_L;
@@ -221,20 +229,8 @@ JNIEXPORT jintArray JNICALL Java_com_facepp_demo_util_ImageCV_imageCVProcess(JNI
 
 
     //处理右眼
-
-    //k-means
-    IrisCenterLocalizationPreProcess::kmeans(inputImg_R);
-    //imwrite("/sdcard/cunxie_Demo/kmeans_R.jpg", inputImg_R);
-
-    //去除连通区域
-    IrisCenterLocalizationPreProcess::removeConnectedComponents(inputImg_R);
-    //LOGD("connectedComponentsCount_R: %d", connectedComponentsCount_R);
-    //imwrite("/sdcard/cunxie_Demo/removeConnectedComponents_R.jpg", inputImg_R);
-
-    //填充凸包获得质心
     Point2i searchingArea_R[2];
-    IrisCenterLocalizationPreProcess::getCentroid(inputImg_R, searchingArea_R);
-    //imwrite("/sdcard/cunxie_Demo/getCentroid_R.jpg", inputImg_R);
+    Point2i massCenter_R = IrisCenterLocalizationPreProcess::preProcess(inputImg_R, searchingArea_R);
 
     //通过卷积定位瞳孔中心
     IrisCenterLocator locator_R;
@@ -296,254 +292,52 @@ void Debug::debugDrawCross(Mat inputImg, Point2i point) {
 /**
  * PreProcess
  */
-//k-means
-void IrisCenterLocalizationPreProcess::kmeans(Mat inputImg) {
+//画质优化
+void IrisCenterLocalizationPreProcess::qualityOptimization(Mat inputImg) {
 
     CV_Assert(!inputImg.empty());
 
-    int index = 0;
-
-    int width = inputImg.cols;
-    int height = inputImg.rows;
-    int sampleCount = width * height;
-    int dims = inputImg.channels();
-
-    //Data for clustering. An array of N-Dimensional points with float coordinates is needed.
-    Mat data(sampleCount, dims, CV_32F, Scalar(10));
-
-    //将原始的RGB数据转换到data
-    for (int row = 0; row < height; row++) {
-        for (int col = 0; col < width; col++) {
-            index = row * width + col;
-            Vec3b bgr = inputImg.at<Vec3b>(row, col);
-            data.at<float>(index, 0) = static_cast<int>(bgr[0]);
-            data.at<float>(index, 1) = static_cast<int>(bgr[1]);
-            data.at<float>(index, 2) = static_cast<int>(bgr[2]);
-        }
-    }
-
-    //Number of clusters to split the set by.
-    int k = 3;
-
-    //Input/output integer array that stores the cluster indices for every sample.
-    Mat bestLabels;
-
-    //The algorithm termination criteria, that is, the maximum number of iterations and/or the desired accuracy. The accuracy is specified as criteria.epsilon. As soon as each of the cluster centers moves by less than criteria.epsilon on some iteration, the algorithm stops.
-    TermCriteria criteria = TermCriteria(TermCriteria::MAX_ITER + TermCriteria::EPS, 100, 1.0);
-
-    //Flag to specify the number of times the algorithm is executed using different initial labellings. The algorithm returns the labels that yield the best compactness (see the last function parameter).
-    int attempts = 3;
-
-    //Flag that can take values of cv::KmeansFlags
-    int flags = KMEANS_RANDOM_CENTERS;
-
-    //Finds centers of clusters and groups input samples around the clusters.
-    ::kmeans(data, k, bestLabels, criteria, attempts, flags);
-
-    //聚类后每簇的bgr值之和
-    int rgbSum[k];
-    for (int i = 0; i < k; i++) {
-        rgbSum[i] = 0;
-    }
-    for (int i = 0; i < bestLabels.rows * bestLabels.cols; i++) {
-        rgbSum[bestLabels.at<int>(i, 0)] += data.at<float>(i, 0) + data.at<float>(i, 1) + data.at<float>(i, 2);
-    }
-    //找出bgr值之和的最小值
-    int num = rgbSum[0];
-    int flag = 0;
-    for (int i = 0; i < k; i++) {
-        if (rgbSum[i] < num) {
-            num = rgbSum[i];
-            flag = i;
-        }
-    }
-
-    //显示图像分割结果
-    //把样本数据点转换回去
-    Scalar blackWhite[] = {
-            Scalar(255,255,255),
-            Scalar(0,0,0)
-    };
-    for (int row = 0; row < height; row++) {
-        for (int col = 0; col < width; col++) {
-            index = row * width + col;
-            int label = bestLabels.at<int>(index, 0);
-            if (label == flag) {
-                inputImg.at<Vec3b>(row, col)[0] = blackWhite[0][0];
-                inputImg.at<Vec3b>(row, col)[1] = blackWhite[0][1];
-                inputImg.at<Vec3b>(row, col)[2] = blackWhite[0][2];
-            } else {
-                inputImg.at<Vec3b>(row, col)[0] = blackWhite[1][0];
-                inputImg.at<Vec3b>(row, col)[1] = blackWhite[1][1];
-                inputImg.at<Vec3b>(row, col)[2] = blackWhite[1][2];
-            }
-        }
-    }
 }
 
-//去除连通区域
-int IrisCenterLocalizationPreProcess::removeConnectedComponents(Mat inputImg) {
+//preProcess
+Point2i IrisCenterLocalizationPreProcess::preProcess(Mat inputImg, Point2i searchingArea[]) {
 
     CV_Assert(!inputImg.empty());
 
-    /*
-     第一轮去除虹膜外部连通域
-     */
+    const int iterationLevel = 5;
+    cv::Mat1b ratedImage = cve::imageSegmentationViaIterativeKmeans(inputImg, iterationLevel);
 
-    //灰度图
-    Mat grayImg;
-
-    //Converts an image from one color space to another.
-    cvtColor(inputImg, grayImg, CV_BGR2GRAY);
-
-    Mat image;
-    image = grayImg;
-
-    //destination labeled image
-    Mat labels;
-    //statistics output for each label, including the background label, see below for available statistics. Statistics are accessed via stats(label, COLUMN) where COLUMN is one of ConnectedComponentsTypes. The data type is CV_32S.
-    Mat stats;
-
-    //centroid output for each label, including the background label. Centroids are accessed via centroids(label, 0) for x and centroids(label, 1) for y. The data type CV_64F.
-    Mat centroids;
-
-    //computes the connected components labeled image of boolean image and also produces a statistics output for each label
-    int nums_0 = connectedComponentsWithStats(image, labels, stats, centroids);
-
-    //原图像大小
-    int statArea_0[nums_0];
-    for (int i = 0; i < nums_0; i++) {
-        statArea_0[i] = stats.at<int>(i, CC_STAT_AREA);
-    }
-    //对连通域面积进行排序
-    sort(statArea_0, statArea_0 + nums_0);
-    //背景区域
-    int backGroundSize = statArea_0[nums_0 - 1];
-    //虹膜区域
-    int irisSize = statArea_0[nums_0 - 2];
-    vector<Vec3b> colors_0(nums_0);
-    for(int i = 0; i < nums_0; i++ ) {
-        if (stats.at<int>(i, CC_STAT_AREA) == backGroundSize) {
-            //保留背景
-            colors_0[i] = Vec3b(0, 0, 0);
-        } else if (stats.at<int>(i, CC_STAT_AREA) == irisSize) {
-            //保留核心区域
-            colors_0[i] = Vec3b(255, 255, 255);
-        } else {
-            //第一轮去除外围连通域
-            colors_0[i] = Vec3b(0, 0, 0);
-
+    double maxAreaRatio = 0.025 * ratedImage.cols * ratedImage.cols * CV_PI / ratedImage.size().area();
+    double minAreaRatio = maxAreaRatio * 0.4;
+    cv::Mat irisArea;
+    double currentMinArea = 1e10;
+    for (int i = 2; i < iterationLevel; i++) {
+        cv::Mat currentLayer = ratedImage >= i;
+        double areaValue = cv::sum(currentLayer)[0] / 255.0 / ratedImage.size().area();
+        if (areaValue > minAreaRatio && areaValue < maxAreaRatio && areaValue < currentMinArea) {
+            irisArea = currentLayer;
+            currentMinArea = areaValue;
         }
     }
-
-    for( int y = 0; y < inputImg.rows; y++ ) {
-        for( int x = 0; x < inputImg.cols; x++ ) {
-            int label = labels.at<int>(y, x);
-            CV_Assert(0 <= label && label <= nums_0);
-            inputImg.at<Vec3b>(y, x) = colors_0[label];
-        }
+    if (irisArea.empty()) {
+        irisArea = ratedImage == 3;
     }
 
-    //cout << "第一轮连通域： " << nums_0 << endl;
-
-    /*
-    第二轮去除虹膜外部连通域
-    */
-
-    //Converts an image from one color space to another.
-    cvtColor(inputImg, grayImg, CV_BGR2GRAY);
-
-    threshold(grayImg, image, 0, 255, THRESH_BINARY_INV);
-
-    int nums_1 = connectedComponentsWithStats(image, labels, stats, centroids);
-
-    //原图像大小
-    int statArea_1[nums_1];
-    for (int i = 0; i < nums_1; i++) {
-        statArea_1[i] = stats.at<int>(i, CC_STAT_AREA);
-    }
-    //对连通域面积进行排序
-    sort(statArea_1, statArea_1 + nums_1);
-    //背景区域
-    backGroundSize = statArea_1[nums_1 - 1];
-    //虹膜区域
-    irisSize = statArea_1[nums_1 - 2];
-    vector<Vec3b> colors_1(nums_1);
-    for(int i = 0; i < nums_1; i++ ) {
-        if (stats.at<int>(i, CC_STAT_AREA) == backGroundSize) {
-            //保留背景
-            colors_1[i] = Vec3b(0, 0, 0);
-        } else if (stats.at<int>(i, CC_STAT_AREA) == irisSize) {
-            //保留核心区域
-            colors_1[i] = Vec3b(255, 255, 255);
-        } else {
-            //第二轮去除内部连通域
-            colors_1[i] = Vec3b(255, 255, 255);
-
-        }
-    }
-
-    for( int y = 0; y < inputImg.rows; y++ ) {
-        for( int x = 0; x < inputImg.cols; x++ ) {
-            int label = labels.at<int>(y, x);
-            CV_Assert(0 <= label && label <= nums_1);
-            inputImg.at<Vec3b>(y, x) = colors_1[label];
-        }
-    }
-
-    return nums_0 + nums_1;
-}
-
-//获取质心区域
-Point2i IrisCenterLocalizationPreProcess::getCentroid(Mat inputImg, Point2i searchingArea[]) {
-
-    CV_Assert(!inputImg.empty());
-
-    Mat grayImg;
-    //Converts an image from one color space to another.
-    cvtColor(inputImg, grayImg, CV_BGR2GRAY);
-
-    //Detected contours. Each contour is stored as a vector of points (e.g. std::vector<std::vector<cv::Point> >).
-    vector< vector <Point> > contours;
-
-    //Contour retrieval mode
-    int mode = RETR_CCOMP;
-
-    //Contour approximation method
-    int method = CHAIN_APPROX_NONE;
-
-    //寻找轮廓
-    findContours(grayImg, contours, mode, method);
-
-    CV_Assert(contours.size() > 0);
-
-    //Output convex hull. It is either an integer vector of indices or vector of points. In the first case, the hull elements are 0-based indices of the convex hull points in the original array (since the set of convex hull points is a subset of the original point set). In the second case, hull elements are the convex hull points themselves.
-    //vector <vector <Point> > hull(contours.size());
-
-    //填充凸包
-    //Finds the convex hull of a point set.
-    //convexHull(Mat(contours[0]), hull[0]);
-    //fillConvexPoly(inputImg, hull[0], Scalar(255, 255, 255), LINE_8);
-
-    //求质心
-    int sumX = 0, sumY = 0;
-    for (int i = 0; i < contours[0].size(); i++) {
-        sumX += contours[0][i].x;
-        sumY += contours[0][i].y;
-    }
-    Point2i centroid;
-    centroid.x = round(sumX / contours[0].size());
-    centroid.y = round(sumY / contours[0].size());
+    irisArea = cve::removeSmallBlobsExceptLargest(irisArea);
+    irisArea = cve::fillConvexHulls(irisArea);
+    cv::Point2f massCenter = cve::blobMassCenter(irisArea)[0];
 
     //计算瞳孔中心搜索区域的搜索长度
-    double searchingLength = sqrt(contourArea(contours[0])) / 4;
-    searchingArea[0].x = round(centroid.x - searchingLength / 2.0);
-    searchingArea[0].y = round(centroid.y - searchingLength / 2.0);
-    searchingArea[1].x = round(centroid.x + searchingLength / 2.0);
-    searchingArea[1].y = round(centroid.y + searchingLength / 2.0);
+    double searchingLength = sqrt(inputImg.cols);
+    searchingArea[0].x = round(massCenter.x - searchingLength);
+    searchingArea[0].y = round(massCenter.y - searchingLength);
+    searchingArea[1].x = round(massCenter.x + searchingLength);
+    searchingArea[1].y = round(massCenter.y + searchingLength);
 
-    return centroid;
+    //Debug::debugDrawAre(inputImg, searchingArea);
+    //Debug::debugShow(inputImg);
 
+    return massCenter;
 }
 
 
@@ -625,55 +419,6 @@ Point2i IrisCenterLocator::convolutionCore(Mat grayImage, vector<Mat> templates,
 
     return bestCenterInEachLayer[bestIndex];
 }
-/*
-void IrisCenterLocator::extractAccurateTemplateParametersFromMask(float returnValue[], Mat maskImage, Point2f irisCenter, float radius) {
-    vector<vector<cv::Point>> contours;
-    vector<Vec4i> hierarchy;
-
-    findContours( maskImage, contours, hierarchy,
-                 CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE );
-
-    if (contours.size() == 0) {
-        return;
-    }
-
-    cv::Point2f leftTop = cv::Point2f(contours[0][0]), rightTop = cv::Point2f(contours[0][0]), leftBottom = cv::Point2f(contours[0][0]), rightBottom = cv::Point2f(contours[0][0]);
-    for (int i = 0 ; i < contours[0].size(); i ++) {
-        cv::Point2f p = cv::Point2f(contours[0][i]);
-        if (cv::abs(cv::norm(irisCenter - p) - radius)<2) { // on circle edge
-            if (p.x < irisCenter.x && p.y < irisCenter.y && p.y < leftTop.y) {
-                leftTop = p;
-            }
-            if (p.x > irisCenter.x && p.y < irisCenter.y && p.y < rightTop.y) {
-                rightTop = p;
-            }
-            if (p.x < irisCenter.x && p.y > irisCenter.y && p.y > leftBottom.y) {
-                leftBottom = p;
-            }
-            if (p.x > irisCenter.x && p.y > irisCenter.y && p.y > rightBottom.y) {
-                rightBottom = p;
-            }
-        }
-    }
-
-    float topBar = 0.5 - (irisCenter.y - (leftTop.y + rightTop.y) * 0.5)  / (2 * radius);
-    float bottomBar = ((leftBottom.y + rightBottom.y) * 0.5 - irisCenter.y + radius) / (2 * radius);
-    bottomBar -= 0.1; // the bottom bar is often lower than actual.
-    if (bottomBar < 0) {
-        bottomBar = 0.9;
-    }
-
-    //
-    returnValue[0] = topBar;
-    returnValue[1] = bottomBar;
-}
-
-Mat IrisCenterLocator::DaugmanIrisCore(Mat eyeImage, vector<Point2f> eyeContour, float irisRadius, Point2f irisCenterPoint) {
-}
-void IrisCenterLocator::localizeIrisCenterIn(Mat eyeImage, vector<Point2f> eyeContour, Point2f irisCenter, float irisRadius, Mat outputImage) {
-
-}
-*/
 
 Point2i IrisCenterLocator::localizeIrisCenter(Mat eyeImage, Point2i searchingArea[]) {
     IrisCenterLocator locator;
@@ -811,5 +556,98 @@ namespace cve {
             return mask;
         }
         return bwImage;
+    }
+
+    cv::Mat1b imageSegmentationViaIterativeKmeans(const cv::Mat& image, int kmeansIterations, float coordinateWeight, int kmeansRepeats)  {
+
+        if (coordinateWeight <= 0) {
+            coordinateWeight = 0.001;
+        }
+
+        cv::Mat1f kmeansPoints((int)image.total(), 5, 0.0f);
+        image.reshape(1,(int)image.total()).convertTo(kmeansPoints.colRange(0,3), CV_32F);
+        std::vector<cv::Point2f> coords(image.total());
+        for(int i = 0 ; i < image.rows; i ++)
+            for(int j = 0 ; j < image.cols; j ++)
+                coords[i * image.cols + j] = cv::Point2f(i,j) * coordinateWeight;
+        cv::Mat(coords).reshape(1, (int)coords.size()).copyTo(kmeansPoints.colRange(3,5));
+
+        cv::Mat1b ratedImage(image.size(), 0);
+        cv::Mat bestLabels, centers, colorsum;
+        std::vector<cv::Point2i> darkerPointIndex;
+
+        for(int it = 1 ; it < kmeansIterations ; it++) {
+            if (kmeansPoints.rows < 2) {
+                break;
+            }
+            cv::kmeans(kmeansPoints, 2, bestLabels, cv::TermCriteria(CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, kmeansRepeats, 0.001), kmeansRepeats, cv::KMEANS_PP_CENTERS, centers);
+            reduce(centers.colRange(0, 3), colorsum, 1, CV_REDUCE_SUM);
+
+            darkerPointIndex.clear();
+            if (colorsum.at<float>(0) < colorsum.at<float>(1)) {
+                cv::findNonZero(bestLabels==0, darkerPointIndex);
+            }
+            else {
+                cv::findNonZero(bestLabels==1, darkerPointIndex);
+            }
+
+            for (int i = 0 ; i < darkerPointIndex.size() ; i ++) {
+                int indexInInteration = darkerPointIndex[i].y;
+                int r = (int) (kmeansPoints(indexInInteration, 3) / coordinateWeight);
+                int c = (int) (kmeansPoints(indexInInteration, 4) / coordinateWeight);
+                ratedImage(r,c) += 1;
+            }
+
+            cv::Mat1f temp;
+            for (int  i = 0; i <darkerPointIndex.size() ; i ++) {
+                temp.push_back(kmeansPoints.row(darkerPointIndex[i].y));
+            }
+            temp.copyTo(kmeansPoints);
+        }
+
+        return ratedImage;
+    }
+
+    cv::Mat fillConvexHulls(const cv::Mat & bwImage) {
+        std::vector<std::vector<cv::Point2i> > contours;
+        std::vector<cv::Vec4i> hierarchy;
+
+        cv::findContours(bwImage.clone(), contours, hierarchy,
+                         CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE );
+
+        // Find the convex hull object for each contour
+        std::vector< std::vector<cv::Point2i> > hull(contours.size());
+        for( int i = 0; i < contours.size(); i++ )
+        {
+            cv::convexHull( cv::Mat(contours[i]), hull[i], false );
+        }
+
+        cv::Mat1b resultCanvas = cv::Mat1b::zeros(bwImage.size());
+        cv::drawContours( resultCanvas, hull, -1, cv::Scalar(255), CV_FILLED);
+
+        return resultCanvas;
+    }
+
+    std::vector<cv::Point2f> blobMassCenter(const cv::Mat & bwImage) {
+        std::vector<cv::Point2f> centers;
+
+        std::vector<std::vector<cv::Point2i> > contours;
+        std::vector<cv::Vec4i> hierarchy;
+
+        cv::findContours(bwImage.clone() , contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE );
+
+        /// Get the moments
+        std::vector<cv::Moments> mu(contours.size());
+        for( int i = 0; i < contours.size(); i++ ) {
+            mu[i] = cv::moments( contours[i], false );
+        }
+
+        ///  Get the mass centers:
+        for( int i = 0; i < contours.size(); i++ ) {
+            centers.push_back(cv::Point2f( mu[i].m10/mu[i].m00 , mu[i].m01/mu[i].m00));
+        }
+
+        return centers;
+
     }
 }
